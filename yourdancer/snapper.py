@@ -18,7 +18,30 @@ def snap_moves_to_audio_onsets(
     Snaps every Argon move timestamp `raw_t` (and `end_t` for holds) to the nearest audio onset or sub-beat grid (`snapped_t`),
     recording `snap_distance_ms` and summary statistics for the verification log.
     """
-    y, sr = librosa.load(str(audio_or_video_path), sr=22050, mono=True)
+    load_path = audio_or_video_path
+    if audio_or_video_path.suffix.lower() not in (".wav", ".flac", ".ogg"):
+        import subprocess
+        wav_out = audio_or_video_path.parent / "extracted_audio.wav"
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-i",
+                str(audio_or_video_path),
+                "-vn",
+                "-ac",
+                "1",
+                "-ar",
+                "22050",
+                str(wav_out),
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        load_path = wav_out
+
+    y, sr = librosa.load(str(load_path), sr=22050, mono=True)
     duration = float(librosa.get_duration(y=y, sr=sr))
 
     onset_env = librosa.onset.onset_strength(y=y, sr=sr, hop_length=256)

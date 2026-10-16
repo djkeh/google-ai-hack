@@ -61,7 +61,16 @@ def extract_moves_with_argon(
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
             logger.info("Uploading %s to Gemini Files API...", video_path.name)
-            uploaded = client.files.upload(file=str(video_path))
+            upload_path = video_path
+            try:
+                video_path.name.encode("ascii")
+            except UnicodeEncodeError:
+                ascii_copy = video_path.parent / "source_dance_video.mp4"
+                if not ascii_copy.exists():
+                    import shutil
+                    shutil.copy2(video_path, ascii_copy)
+                upload_path = ascii_copy
+            uploaded = client.files.upload(file=str(upload_path))
             file_name = uploaded.name
             file_uri = uploaded.uri
 

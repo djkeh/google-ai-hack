@@ -17,4 +17,4 @@ COPY . .
 ENV PORT=8002
 EXPOSE 8002
 
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8002}"]

@@ -210,9 +210,13 @@ async def api_upload_video(
     seed_spec = None
 
     if video is not None and video.filename:
-        safe_name = Path(video.filename).name
-        if not safe_name.lower().endswith((".mp4", ".mov", ".webm")):
-            safe_name += ".mp4"
+        import re
+        raw_name = Path(video.filename).name
+        ext = Path(raw_name).suffix.lower()
+        if ext not in (".mp4", ".mov", ".webm"):
+            ext = ".mp4"
+        ascii_stem = re.sub(r"[^a-zA-Z0-9_-]+", "_", Path(raw_name).stem).strip("_") or "uploaded_dance"
+        safe_name = f"{ascii_stem}{ext}"
         video_path = job_dir / safe_name
         with open(video_path, "wb") as f:
             shutil.copyfileobj(video.file, f)

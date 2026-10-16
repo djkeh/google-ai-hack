@@ -7,6 +7,22 @@ ENV_PATH = ROOT_DIR / ".env"
 if ENV_PATH.exists():
     load_dotenv(ENV_PATH)
 
+LOCAL_ENV_PATH = Path(__file__).resolve().parent / ".env"
+if LOCAL_ENV_PATH.exists():
+    load_dotenv(LOCAL_ENV_PATH)
+
+# Cloud Run Credential Guard: if GOOGLE_APPLICATION_CREDENTIALS points to a non-existent host path,
+# remove it so Cloud Run falls back to its built-in Service Account Application Default Credentials.
+_gac = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+if _gac and not Path(_gac).exists():
+    os.environ.pop("GOOGLE_APPLICATION_CREDENTIALS", None)
+elif not _gac:
+    _default_adc = "/Users/uno/.config/gcloud/legacy_credentials/devstar2655@gcplab.me/adc.json"
+    if Path(_default_adc).exists():
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = _default_adc
+
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
+
 YOURDANCER_DIR = Path(__file__).resolve().parent
 DATA_DIR = YOURDANCER_DIR / "data"
 VIDEOS_DIR = DATA_DIR / "videos"
@@ -24,15 +40,8 @@ LYRIA_MODEL = os.getenv("LYRIA_MODEL", "lyria-3.5")
 
 GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "h2gdm-hack26icn-2655")
 GCP_REGION = os.getenv("GCP_REGION", "asia-northeast3")
-GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "h2gdm-hack26icn-2655-assets")
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", os.getenv("GCS_BUCKET", "h2gdm-hack26icn-2655-assets"))
 FIRESTORE_DATABASE = os.getenv("FIRESTORE_DATABASE", "(default)")
 FIRESTORE_COLLECTION = "yourdancer_jobs"
 
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv(
-    "GOOGLE_APPLICATION_CREDENTIALS",
-    "/Users/uno/.config/gcloud/legacy_credentials/devstar2655@gcplab.me/adc.json",
-)
-if GOOGLE_APPLICATION_CREDENTIALS and Path(GOOGLE_APPLICATION_CREDENTIALS).exists():
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS
-
-PORT = int(os.getenv("YOURDANCER_PORT", "8002"))
+PORT = int(os.getenv("PORT", os.getenv("YOURDANCER_PORT", "8002")))
