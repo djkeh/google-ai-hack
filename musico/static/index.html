@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Musico — AI Motion-Graphics Director (Gemini 4 Argon)</title>
+  <title>Musico — Interactive Stage</title>
   <style>
     :root {
-      --bg: #07070e;
-      --bg-card: #10101e;
-      --bg-card-alt: #16162a;
-      --border: rgba(255, 255, 255, 0.10);
-      --border-highlight: rgba(168, 85, 247, 0.45);
+      --bg: #07070f;
+      --bg-card: #0f101d;
+      --bg-card-alt: #16182c;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(168, 85, 247, 0.5);
       --text: #f8fafc;
       --muted: #94a3b8;
       --purple: #a855f7;
@@ -23,29 +23,32 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      line-height: 1.45;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
       min-height: 100vh;
+      overflow-x: hidden;
     }
-    /* Top Header */
+
+    /* ── 상단 내비게이션 바 ── */
     header {
-      background: rgba(16, 16, 30, 0.92);
+      background: rgba(11, 12, 24, 0.95);
       border-bottom: 1px solid var(--border);
       padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 16px;
       position: sticky;
       top: 0;
       z-index: 50;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
+      cursor: pointer;
     }
     .brand-logo {
       width: 38px;
@@ -55,10 +58,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 19px;
-      color: #07070e;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+      color: #070710;
+      box-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
     }
     .brand-title h1 {
       font-size: 18px;
@@ -72,161 +75,235 @@
       font-size: 12px;
       color: var(--muted);
     }
-    .pill {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 600;
-      background: rgba(168, 85, 247, 0.18);
-      color: #d8b4fe;
-      border: 1px solid rgba(168, 85, 247, 0.4);
-    }
-    .pill-cyan {
-      background: rgba(0, 245, 212, 0.14);
-      color: var(--cyan);
-      border-color: rgba(0, 245, 212, 0.35);
-    }
-    .switcher-bar {
+
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
+
+    /* 버튼 스타일 */
     .btn {
       background: var(--bg-card-alt);
       color: var(--text);
       border: 1px solid var(--border);
       padding: 8px 14px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      user-select: none;
     }
     .btn:hover {
       border-color: var(--purple);
       background: rgba(168, 85, 247, 0.16);
+      transform: translateY(-1px);
     }
     .btn.active {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(0, 245, 212, 0.18));
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(0, 245, 212, 0.2));
       border-color: var(--cyan);
       color: #fff;
-      box-shadow: 0 0 16px rgba(0, 245, 212, 0.2);
+      box-shadow: 0 0 14px rgba(0, 245, 212, 0.25);
     }
     .btn-primary {
       background: linear-gradient(135deg, #9333ea, #6366f1);
       border-color: #a855f7;
       color: #fff;
+      box-shadow: 0 0 16px rgba(147, 51, 234, 0.3);
     }
     .btn-primary:hover {
-      filter: brightness(1.12);
+      filter: brightness(1.15);
+      transform: translateY(-1px);
     }
-    /* Main Grid */
-    .studio-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 1fr;
-      gap: 18px;
-      padding: 18px 24px 36px;
-      max-width: 1720px;
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+    .btn-secondary:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      background: rgba(168, 85, 247, 0.16);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+    .pill-cyan {
+      background: rgba(0, 245, 212, 0.12);
+      color: var(--cyan);
+      border-color: rgba(0, 245, 212, 0.3);
+    }
+
+    /* ── 메인 컨테이너 ── */
+    .stage-container {
+      max-width: 1360px;
       margin: 0 auto;
-    }
-    @media (max-width: 1180px) {
-      .studio-grid { grid-template-columns: 1fr; }
-    }
-    .col {
+      padding: 20px 24px 60px;
       display: flex;
       flex-direction: column;
       gap: 18px;
     }
-    .card {
-      background: var(--bg-card);
+
+    /* ── 1. 메인 스테이지 카드 ── */
+    .stage-card {
+      background: #080914;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
-    .card-header {
+    .stage-card-header {
+      padding: 12px 20px;
+      background: rgba(16, 17, 32, 0.85);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .card-title {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #e2e8f0;
+    .stage-title {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
     }
-    /* Scene Player */
     .player-frame-wrap {
       width: 100%;
-      aspect-ratio: 16 / 9.8;
-      background: #05050a;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+      aspect-ratio: 16 / 9;
+      background: #040408;
+      position: relative;
     }
     #scene-iframe {
       width: 100%;
       height: 100%;
       border: none;
+      display: block;
     }
-    .seek-bar {
+
+    /* 스테이지 하단 퀵 내비게이션 바 */
+    .seek-hotspots {
+      padding: 12px 20px;
+      background: rgba(14, 15, 28, 0.95);
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .redirect-box {
+    .hotspots-group {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
     }
-    .redirect-input {
+    .hotspot-btn {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid var(--border);
+      padding: 6px 13px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .hotspot-btn:hover {
+      border-color: var(--cyan);
+      color: #fff;
+      background: rgba(0, 245, 212, 0.12);
+    }
+    .hotspot-btn.climax {
+      border-color: rgba(250, 204, 21, 0.4);
+      color: var(--gold);
+      background: rgba(250, 204, 21, 0.08);
+    }
+    .hotspot-btn.climax:hover {
+      background: rgba(250, 204, 21, 0.2);
+    }
+    .seek-readout {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 12px;
+      color: var(--cyan);
+    }
+
+    /* ── 2. 연출 커스텀 입력창 ── */
+    .director-bar {
+      display: flex;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .director-input {
       flex: 1;
-      background: #090913;
+      background: #080914;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 9px 12px;
+      padding: 10px 14px;
       border-radius: 8px;
       font-size: 13px;
+      transition: border-color 0.15s ease;
     }
-    .redirect-input:focus {
+    .director-input:focus {
       outline: none;
-      border-color: var(--cyan);
+      border-color: var(--purple);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
     }
-    /* Visual Score Timeline & Cues */
-    .director-summary {
-      font-size: 13px;
-      color: #cbd5e1;
-      background: rgba(168, 85, 247, 0.08);
-      border-left: 3px solid var(--purple);
-      padding: 10px 12px;
-      border-radius: 0 8px 8px 0;
+
+    /* ── 3. 음악 흐름 & 안무 타임라인 ── */
+    .song-overview-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .card-header-simple {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 14px;
+      gap: 10px;
+    }
+    .card-title-simple {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .sections-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 14px;
+    }
+    @media (max-width: 768px) {
+      .sections-strip { grid-template-columns: repeat(2, 1fr); }
     }
     .sec-block {
       background: var(--bg-card-alt);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 9px 10px;
+      padding: 10px 12px;
       cursor: pointer;
       transition: all 0.15s ease;
     }
@@ -235,7 +312,7 @@
       transform: translateY(-1px);
     }
     .sec-block.climax {
-      border-color: rgba(250, 204, 21, 0.55);
+      border-color: rgba(250, 204, 21, 0.5);
       background: rgba(250, 204, 21, 0.08);
     }
     .sec-time {
@@ -244,38 +321,63 @@
       color: var(--cyan);
     }
     .sec-name {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      margin: 2px 0;
+      margin: 3px 0;
     }
     .sec-mood {
       font-size: 11px;
       color: var(--muted);
     }
+
     #energy-canvas {
       width: 100%;
-      height: 86px;
-      background: #090914;
+      height: 76px;
+      background: #080914;
       border-radius: 8px;
       border: 1px solid var(--border);
       margin-bottom: 14px;
       cursor: pointer;
+      display: block;
+    }
+
+    /* 안무 상세 리스트 */
+    .cue-accordion {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #090a16;
+    }
+    .cue-accordion-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.02);
+      user-select: none;
+    }
+    .cue-accordion-header:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
     .cue-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: 360px;
+      gap: 6px;
+      max-height: 280px;
       overflow-y: auto;
-      padding-right: 4px;
+      padding: 10px;
     }
     .cue-item {
       background: var(--bg-card-alt);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: 7px;
+      padding: 9px 12px;
       display: grid;
-      grid-template-columns: 165px 1fr;
+      grid-template-columns: 140px 1fr;
       gap: 12px;
       align-items: center;
       cursor: pointer;
@@ -283,12 +385,12 @@
     }
     .cue-item:hover {
       border-color: var(--purple);
-      background: rgba(168, 85, 247, 0.12);
+      background: rgba(168, 85, 247, 0.14);
     }
     .cue-meta {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
     .cue-time {
       font-family: "SF Mono", Menlo, monospace;
@@ -296,341 +398,160 @@
       font-weight: 700;
       color: var(--gold);
     }
-    .snap-badge {
-      font-family: "SF Mono", Menlo, monospace;
-      font-size: 10px;
-      color: var(--cyan);
-      background: rgba(0, 245, 212, 0.10);
-      padding: 2px 6px;
-      border-radius: 4px;
-      display: inline-block;
-      width: fit-content;
-    }
     .cue-why {
-      font-size: 13px;
+      font-size: 12px;
       color: #f1f5f9;
     }
     .cue-trigger {
       font-size: 11px;
       color: var(--muted);
       margin-top: 2px;
-      font-family: "SF Mono", Menlo, monospace;
     }
-    /* Character Sheet Preview */
-    .char-meta-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .palette-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    .swatch {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    .sprite-preview-box {
-      background: repeating-conic-gradient(#181828 0% 25%, #10101c 0% 50%) 50% / 16px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-      overflow-x: auto;
-    }
-    .sprite-preview-box img {
-      width: 100%;
-      min-width: 580px;
-      height: auto;
-      display: block;
-    }
-    .pose-labels {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      text-align: center;
-      font-size: 10px;
-      font-family: "SF Mono", Menlo, monospace;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-    /* Verification Panel */
-    .iter-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 14px;
-      background: #0c0c18;
-    }
-    .iter-card.fail {
-      border-color: rgba(239, 68, 68, 0.45);
-      background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(12, 12, 24, 0.95) 100%);
-    }
-    .iter-card.pass {
-      border-color: rgba(34, 197, 94, 0.45);
-      background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, rgba(12, 12, 24, 0.95) 100%);
-    }
-    .status-badge {
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-    .status-badge.fail {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid var(--red);
-    }
-    .status-badge.pass {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid var(--green);
-    }
-    .signals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0;
-    }
-    .signal-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 10px;
-      font-size: 11px;
-    }
-    .signal-box strong {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 2px;
-    }
-    .proxy-frames-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .proxy-frame-card {
-      background: #07070d;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .proxy-frame-card img {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      display: block;
-    }
-    .proxy-frame-caption {
-      font-size: 10px;
-      color: var(--muted);
-      padding: 4px 6px;
-      text-align: center;
-      font-family: "SF Mono", Menlo, monospace;
-    }
-    pre.diff-block {
-      background: #06060c;
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      border-radius: 6px;
-      padding: 10px;
-      font-family: "SF Mono", Menlo, monospace;
-      font-size: 11px;
-      color: #e2e8f0;
-      overflow-x: auto;
-      margin-top: 10px;
-      line-height: 1.4;
-    }
+
+    /* ── 토스트 메시지 ── */
     .toast {
       position: fixed;
-      bottom: 20px;
+      bottom: 24px;
       right: 24px;
-      background: #1e1b4b;
-      border: 1px solid var(--cyan);
+      background: #181932;
+      border: 1px solid var(--purple);
       color: #fff;
-      padding: 12px 18px;
+      padding: 12px 20px;
       border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
       display: none;
       z-index: 100;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+
+  <!-- 상단 내비게이션 바 -->
   <header>
-    <div class="brand">
+    <div class="brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
       <div class="brand-logo">M</div>
       <div class="brand-title">
-        <h1>
-          MUSICO
-          <span class="pill">Gemini 4 Argon Director</span>
-          <span class="pill pill-cyan">Nano Banana 2.1 + Librosa DSP</span>
-        </h1>
-        <div class="brand-subtitle">
-          AI Motion-Graphics Director — Authors a timed Visual Score with 'why' cues, builds a 2D sprite scene, and self-verifies via Playwright + Argon QA
-        </div>
+        <h1>MUSICO</h1>
+        <div class="brand-subtitle">인터랙티브 모션 그래픽 스테이지</div>
       </div>
     </div>
 
-    <div class="switcher-bar">
+    <!-- 곡 선택 -->
+    <div class="header-actions">
       <button id="demo-btn-1" class="btn active" onclick="selectJob('demo_sugar_plum_fairy')">
-        🩰 Track 1: Sugar Plum Fairy (Celesta)
+        🩰 Sugar Plum Fairy
       </button>
       <button id="demo-btn-2" class="btn" onclick="selectJob('demo_neon_pulse')">
-        ⚡ Track 2: Neon Pulse (Synthwave)
+        ⚡ Neon Pulse
       </button>
-      <select id="job-selector" class="btn" onchange="selectJob(this.value)" style="max-width: 220px;">
-        <option value="demo_sugar_plum_fairy">All Jobs...</option>
+      <select id="job-selector" class="btn" onchange="selectJob(this.value)" style="max-width: 170px;">
+        <option value="demo_sugar_plum_fairy">트랙 선택...</option>
       </select>
-      <button id="run-live-btn" class="btn btn-primary" onclick="runLivePipeline()">
-        ▶ Run Live Director Pipeline
-      </button>
-      <button id="reverify-btn" class="btn" onclick="rerunVerification()">
-        🔍 Re-Verify (Playwright + Argon)
-      </button>
     </div>
   </header>
 
-  <main class="studio-grid">
-    <!-- Left Column: Interactive Scene Player + Visual Score Inspector -->
-    <div class="col">
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>🎬 Interactive Stage Player</span>
-            <span id="active-job-badge" class="pill pill-cyan">demo_sugar_plum_fairy</span>
-          </div>
-          <div style="display:flex; gap:6px; align-items:center;">
-            <a id="open-standalone-link" href="/jobs/demo_sugar_plum_fairy/scene/index.html" target="_blank" class="btn" style="padding:4px 10px; font-size:11px;">
-              ↗ Open Standalone Scene
-            </a>
-          </div>
+  <!-- 메인 플레이어 컨테이너 -->
+  <main class="stage-container">
+
+    <!-- 1. 메인 스테이지 (16:9 Canvas) -->
+    <section class="stage-card">
+      <div class="stage-card-header">
+        <div class="stage-title">
+          <span id="stage-title-text" style="font-size: 15px;">Dance of the Sugar Plum Fairy</span>
+          <span id="score-meta-pill" class="pill">120 BPM · 32.0s</span>
         </div>
-
-        <div class="player-frame-wrap">
-          <iframe id="scene-iframe" src="/jobs/demo_sugar_plum_fairy/scene/index.html" allow="autoplay"></iframe>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <a id="open-standalone-link" href="/jobs/demo_sugar_plum_fairy/scene/index.html" target="_blank" class="btn btn-secondary" style="padding:5px 11px; font-size:12px;">
+            ↗ 전체 화면으로 보기
+          </a>
         </div>
+      </div>
 
-        <div class="seek-bar">
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn" onclick="seekSceneTo(2.0)">⏱ Seek Intro Cue (2.0s)</button>
-            <button class="btn" onclick="seekSceneTo(10.0)">⏱ Seek B-Section (10.0s)</button>
-            <button class="btn" onclick="seekSceneToClimax()">🔥 Seek Climax Drop</button>
-            <button class="btn" onclick="seekSceneTo(29.5)">⏱ Seek Coda (29.5s)</button>
-          </div>
-          <span id="seek-status-readout" style="font-size:11px; color:var(--cyan); font-family:monospace;">
-            window.__seek(t) ready
-          </span>
+      <!-- 캔버스 인터랙티브 플레이어 프레임 -->
+      <div class="player-frame-wrap">
+        <iframe id="scene-iframe" src="/jobs/demo_sugar_plum_fairy/scene/index.html" allow="autoplay"></iframe>
+      </div>
+
+      <!-- 구간 바로가기 핫스팟 바 -->
+      <div class="seek-hotspots">
+        <div class="hotspots-group">
+          <span style="font-size: 11px; font-weight: 700; color: var(--muted); margin-right: 4px;">구간 점프:</span>
+          <button class="hotspot-btn" onclick="seekSceneTo(2.0)">도입부 (2.0s)</button>
+          <button class="hotspot-btn" onclick="seekSceneTo(10.0)">전개부 (10.0s)</button>
+          <button class="hotspot-btn climax" onclick="seekSceneToClimax()">★ 클라이맥스</button>
+          <button class="hotspot-btn" onclick="seekSceneTo(29.5)">마무리 (29.5s)</button>
         </div>
-
-        <div class="redirect-box">
-          <input
-            id="redirect-prompt-input"
-            class="redirect-input"
-            type="text"
-            placeholder="Re-direct Style with 1 line (e.g. 'Increase jump intensity on every B-section bell accent with golden aurora sparks')..."
-          />
-          <button class="btn btn-primary" onclick="redirectCurrentJob()">✨ Re-Direct Scene</button>
+        <div id="seek-status-readout" class="seek-readout">
+          재생 준비 완료
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>🎼 Visual Score Inspector & Librosa Onset Snap Log</span>
-          </div>
-          <span id="score-meta-pill" class="pill">120 BPM · 32.0s · 10 Cues</span>
+    <!-- 2. 연출 변경 입력창 (원클릭 재연출) -->
+    <section class="director-bar">
+      <span style="font-size: 18px;">✨</span>
+      <input
+        id="redirect-prompt-input"
+        class="director-input"
+        type="text"
+        placeholder="무대 연출을 변경해보세요 (예: '클라이맥스에 화려한 점프와 골드 파티클 추가', '더 빠른 회전 안무로 변경')..."
+        onkeydown="if(event.key === 'Enter') redirectCurrentJob()"
+      />
+      <button class="btn btn-primary" onclick="redirectCurrentJob()">
+        무대 연출 적용
+      </button>
+    </section>
+
+    <!-- 3. 음악 흐름 & 안무 타임라인 -->
+    <section class="song-overview-card">
+      <div class="card-header-simple">
+        <div class="card-title-simple">
+          <span>🎼 음악 구조 및 에너지 곡선</span>
         </div>
-
-        <div id="director-summary-box" class="director-summary">
-          Loading Gemini 4 Argon directorial score...
+        <div style="font-size:12px; color:var(--muted);">
+          캐릭터: <strong id="char-name-simple" style="color:var(--text);">Aurelia</strong>
         </div>
+      </div>
 
-        <div id="sections-strip" class="sections-strip"></div>
+      <!-- 4개 섹션 스트립 -->
+      <div id="sections-strip" class="sections-strip"></div>
 
-        <canvas id="energy-canvas" width="900" height="86" title="Click anywhere on the RMS Energy & Onset Curve to invoke window.__seek(t)"></canvas>
+      <!-- 인터랙티브 에너지 파형 (클릭하여 해당 위치로 점프) -->
+      <canvas id="energy-canvas" width="900" height="76" title="파형의 원하는 위치를 클릭하면 해당 구간으로 점프합니다"></canvas>
 
-        <div class="card-title" style="margin-bottom:8px; font-size:12px;">
-          <span>🎯 Timed Choreography Cues (`events[].why` + Librosa Onset Snapping)</span>
+      <!-- 상세 안무 리스트 (접이식) -->
+      <div class="cue-accordion">
+        <div class="cue-accordion-header" onclick="toggleCueList()">
+          <span>🎯 상세 안무 타이밍 (<span id="cue-count-text">10개 동작</span>)</span>
+          <span id="cue-arrow-icon" style="font-size: 11px; color: var(--muted);">▸ 안무 목록 보기</span>
         </div>
-        <div id="cue-list" class="cue-list"></div>
-      </section>
-    </div>
+        <div id="cue-list" class="cue-list" style="display: none;"></div>
+      </div>
+    </section>
 
-    <!-- Right Column: 3-Stage Self-Verification Loop + 8-Pose Character Sheet -->
-    <div class="col">
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>🛡️ 3-Stage Self-Verification & Auto-Patch Loop</span>
-          </div>
-          <span id="final-verify-badge" class="status-badge pass">VERIFIED PASS</span>
-        </div>
-
-        <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
-          Every generated scene is verified headlessly via Playwright Chromium (<code>window.__seek(t)</code> &amp; <code>window.__musicoLog</code>) and inspected multimodally by <strong>Gemini 4 Argon</strong> against the Visual Score's <code>why</code> checklist.
-        </div>
-
-        <div id="verification-iterations-container"></div>
-
-        <div id="cloud-sync-footer" style="font-size:11px; color:var(--muted); border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-          <span id="gcs-status-text">GCS: gs://h2gdm-hack26icn-2655-assets/musico/...</span>
-          <span id="firestore-status-text">Firestore: Synced (musico_jobs)</span>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>🧚 8-Pose Character Sprite Sheet & #00FF00 Chroma-Key</span>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button id="btn-rgba-sheet" class="btn active" style="padding:4px 9px; font-size:11px;" onclick="toggleSpriteMode('rgba')">
-              RGBA Chroma-Keyed
-            </button>
-            <button id="btn-raw-sheet" class="btn" style="padding:4px 9px; font-size:11px;" onclick="toggleSpriteMode('raw')">
-              Raw #00FF00 Sheet
-            </button>
-          </div>
-        </div>
-
-        <div class="char-meta-row">
-          <div>
-            <div id="char-name-text" style="font-weight:700; font-size:14px;">Aurelia (The Sugar-Plum Sprite)</div>
-            <div id="char-concept-text" style="font-size:12px; color:var(--muted);">Crystalline ballet fairy</div>
-          </div>
-          <div id="char-palette-row" class="palette-row"></div>
-        </div>
-
-        <div class="sprite-preview-box">
-          <img id="sprite-sheet-img" src="/jobs/demo_sugar_plum_fairy/scene/sprites.png" alt="8-Pose Character Sprite Sheet" />
-          <div class="pose-labels">
-            <span>1. idle</span>
-            <span>2. bounce</span>
-            <span>3. step_left</span>
-            <span>4. step_right</span>
-            <span>5. arms_up</span>
-            <span>6. spin</span>
-            <span>7. jump</span>
-            <span>8. hold</span>
-          </div>
-        </div>
-      </section>
-    </div>
   </main>
 
-  <div id="toast" class="toast">Running Gemini 4 Argon Director Pipeline...</div>
+  <!-- 알림 토스트 -->
+  <div id="toast" class="toast">요청을 처리하고 있습니다...</div>
 
   <script>
     let currentJob = null;
-    let spriteMode = "rgba";
+    let cueListOpen = false;
+
+    function toggleCueList() {
+      cueListOpen = !cueListOpen;
+      const list = document.getElementById("cue-list");
+      const icon = document.getElementById("cue-arrow-icon");
+      list.style.display = cueListOpen ? "flex" : "none";
+      icon.textContent = cueListOpen ? "▾ 안무 목록 접기" : "▸ 안무 목록 보기";
+    }
 
     function showToast(msg, durationMs = 0) {
       const el = document.getElementById("toast");
@@ -653,7 +574,7 @@
       (data.jobs || []).forEach(j => {
         const opt = document.createElement("option");
         opt.value = j.job_id;
-        opt.textContent = `${j.title} [${j.job_id}]`;
+        opt.textContent = `${j.title}`;
         if (j.job_id === selectedId) opt.selected = true;
         sel.appendChild(opt);
       });
@@ -671,7 +592,7 @@
     }
 
     function renderJobToStudio(job) {
-      document.getElementById("active-job-badge").textContent = job.job_id;
+      document.getElementById("stage-title-text").textContent = job.title || "무대";
       document.getElementById("open-standalone-link").href = job.scene_url;
 
       const iframe = document.getElementById("scene-iframe");
@@ -685,11 +606,13 @@
       const char = score.character || {};
 
       document.getElementById("score-meta-pill").textContent =
-        `${score.bpm || 120} BPM · ${score.duration || 32}s · ${events.length} Onset-Snapped Cues`;
-      document.getElementById("director-summary-box").textContent =
-        score.director_summary || "";
+        `${score.bpm || 120} BPM · ${score.duration || 32}s · ${events.length}개 안무`;
+      document.getElementById("char-name-simple").textContent =
+        char.name || "주인공";
+      document.getElementById("cue-count-text").textContent =
+        `${events.length}개 동작`;
 
-      // Render Sections Strip
+      // 섹션 스트립 렌더링
       const secStrip = document.getElementById("sections-strip");
       secStrip.innerHTML = "";
       const climaxStart = (score.climax && score.climax.start) || 18.0;
@@ -699,68 +622,34 @@
         div.className = "sec-block" + (isClimax ? " climax" : "");
         div.onclick = () => seekSceneTo(sec.start + 0.15);
         div.innerHTML = `
-          <div class="sec-time">${sec.start.toFixed(1)}s – ${sec.end.toFixed(1)}s ${isClimax ? "★ CLIMAX" : ""}</div>
+          <div class="sec-time">${sec.start.toFixed(1)}s – ${sec.end.toFixed(1)}s ${isClimax ? "★ 클라이맥스" : ""}</div>
           <div class="sec-name">${sec.name}</div>
-          <div class="sec-mood">${sec.mood} · Energy ${(sec.energy * 100).toFixed(0)}%</div>
+          <div class="sec-mood">${sec.mood} · ${(sec.energy * 100).toFixed(0)}%</div>
         `;
         secStrip.appendChild(div);
       });
 
-      // Render Energy Curve Canvas
+      // 에너지 곡선 캔버스 그리기
       drawEnergyTimeline(job);
 
-      // Render Cue List with Onset Snap Deltas & 'Why'
+      // 안무 목록 렌더링
       const cueList = document.getElementById("cue-list");
       cueList.innerHTML = "";
       events.forEach(ev => {
         const item = document.createElement("div");
         item.className = "cue-item";
         item.onclick = () => seekSceneTo(ev.t + 0.12);
-        const sign = ev.snap_delta_ms >= 0 ? "+" : "";
         item.innerHTML = `
           <div class="cue-meta">
             <span class="cue-time">⏱ ${ev.t.toFixed(2)}s · ${ev.action.toUpperCase()}</span>
-            <span class="snap-badge" title="LLM raw_t=${ev.raw_t.toFixed(2)}s snapped to Librosa onset t=${ev.t.toFixed(2)}s">
-              raw ${ev.raw_t.toFixed(2)}s → Δ ${sign}${ev.snap_delta_ms.toFixed(1)}ms
-            </span>
           </div>
           <div>
-            <div class="cue-why"><strong>Why:</strong> "${ev.why}"</div>
-            <div class="cue-trigger">Trigger: ${ev.trigger} · Intensity: ${(ev.intensity * 100).toFixed(0)}%</div>
+            <div class="cue-why">${ev.why}</div>
+            <div class="cue-trigger">강도: ${(ev.intensity * 100).toFixed(0)}%</div>
           </div>
         `;
         cueList.appendChild(item);
       });
-
-      // Render Character Sheet
-      document.getElementById("char-name-text").textContent = char.name || "Protagonist";
-      document.getElementById("char-concept-text").textContent = `${char.concept || ""} (${char.style || ""})`;
-      const palRow = document.getElementById("char-palette-row");
-      palRow.innerHTML = "";
-      (char.palette || []).forEach(hex => {
-        const sw = document.createElement("div");
-        sw.className = "swatch";
-        sw.style.background = hex;
-        sw.title = hex;
-        palRow.appendChild(sw);
-      });
-      updateSpriteSheetImg();
-
-      // Render 3-Stage Verification History (Iteration 1 FAIL -> Patch -> Iteration 2 PASS)
-      renderVerificationHistory(job);
-    }
-
-    function updateSpriteSheetImg() {
-      if (!currentJob) return;
-      const img = document.getElementById("sprite-sheet-img");
-      img.src = (spriteMode === "raw" ? currentJob.sprite_raw_url : currentJob.sprite_url) + `?t=${Date.now()}`;
-      document.getElementById("btn-rgba-sheet").classList.toggle("active", spriteMode === "rgba");
-      document.getElementById("btn-raw-sheet").classList.toggle("active", spriteMode === "raw");
-    }
-
-    function toggleSpriteMode(mode) {
-      spriteMode = mode;
-      updateSpriteSheetImg();
     }
 
     function drawEnergyTimeline(job) {
@@ -775,25 +664,25 @@
       const curve = (job.features_summary && job.features_summary.rms_curve) || [];
       const climax = score.climax || { start: 18, end: 27 };
 
-      // Highlight Climax zone
+      // 클라이맥스 구간 강조
       const cx1 = (climax.start / dur) * W;
       const cx2 = (climax.end / dur) * W;
       ctx.fillStyle = "rgba(250, 204, 21, 0.12)";
       ctx.fillRect(cx1, 0, cx2 - cx1, H);
 
-      // Draw RMS Curve
+      // 에너지 파형
       if (curve.length > 1) {
         ctx.beginPath();
         ctx.moveTo(0, H);
         curve.forEach(pt => {
           const x = (pt.t / dur) * W;
-          const y = H - 10 - pt.value * (H - 24);
+          const y = H - 8 - pt.value * (H - 20);
           ctx.lineTo(x, y);
         });
         ctx.lineTo(W, H);
         ctx.closePath();
         const grad = ctx.createLinearGradient(0, 0, 0, H);
-        grad.addColorStop(0, "rgba(168, 85, 247, 0.55)");
+        grad.addColorStop(0, "rgba(168, 85, 247, 0.5)");
         grad.addColorStop(1, "rgba(0, 245, 212, 0.05)");
         ctx.fillStyle = grad;
         ctx.fill();
@@ -801,7 +690,7 @@
         ctx.beginPath();
         curve.forEach((pt, idx) => {
           const x = (pt.t / dur) * W;
-          const y = H - 10 - pt.value * (H - 24);
+          const y = H - 8 - pt.value * (H - 20);
           if (idx === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         });
@@ -810,19 +699,19 @@
         ctx.stroke();
       }
 
-      // Draw Cue Markers
+      // 안무 포인트 마커
       (score.events || []).forEach(ev => {
         const x = (ev.t / dur) * W;
         ctx.strokeStyle = "#facc15";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(x, 6);
-        ctx.lineTo(x, H - 6);
+        ctx.moveTo(x, 4);
+        ctx.lineTo(x, H - 4);
         ctx.stroke();
 
         ctx.fillStyle = "#facc15";
         ctx.beginPath();
-        ctx.arc(x, 12, 4, 0, Math.PI * 2);
+        ctx.arc(x, 10, 3.5, 0, Math.PI * 2);
         ctx.fill();
       });
 
@@ -834,120 +723,17 @@
       };
     }
 
-    function renderVerificationHistory(job) {
-      const container = document.getElementById("verification-iterations-container");
-      container.innerHTML = "";
-      const history = job.verification_history || [];
-
-      const finalBadge = document.getElementById("final-verify-badge");
-      const passed = job.final_verification && job.final_verification.passed;
-      finalBadge.className = "status-badge " + (passed ? "pass" : "fail");
-      finalBadge.textContent = passed
-        ? `PASS (${history.length} Iterations · Argon QA ${job.final_verification.argon_score}/100)`
-        : "VERIFICATION FAILED";
-
-      history.forEach(it => {
-        const isPass = it.status === "PASS";
-        const card = document.createElement("div");
-        card.className = "iter-card " + (isPass ? "pass" : "fail");
-
-        const ca = it.check_a_runtime || {};
-        const cb = it.check_b_timing_bounds || {};
-        const cc = it.check_c_argon_critique || {};
-
-        let framesHtml = "";
-        if (it.proxy_frames && it.proxy_frames.length) {
-          const labels = ["Intro Cue Proxy", "B-Section Cue Proxy", "Climax Apex Proxy"];
-          framesHtml = `<div class="proxy-frames-row">` +
-            it.proxy_frames.map((url, idx) => `
-              <div class="proxy-frame-card">
-                <img src="${url}?v=${Date.now()}" alt="Proxy Frame ${idx + 1}" />
-                <div class="proxy-frame-caption">Iter ${it.iteration} · ${labels[idx] || "Frame"}</div>
-              </div>
-            `).join("") +
-          `</div>`;
-        }
-
-        let diffHtml = "";
-        if (it.patch_diff) {
-          diffHtml = `
-            <div style="margin-top:10px; font-size:12px; font-weight:700; color:#d8b4fe;">
-              🔧 Auto-Patch Applied Before Next Iteration: ${it.patch_applied || ""}
-            </div>
-            <pre class="diff-block">${it.patch_diff}</pre>
-          `;
-        }
-
-        let reasonsHtml = "";
-        if (!isPass && it.failure_reasons && it.failure_reasons.length) {
-          reasonsHtml = `
-            <div style="background:rgba(239,68,68,0.14); border-left:3px solid var(--red); padding:8px 10px; font-size:12px; color:#fecaca; margin-top:8px; border-radius:0 6px 6px 0;">
-              <strong>Detected Defects (Iteration ${it.iteration}):</strong><br/>
-              ${it.failure_reasons.map(r => "• " + r).join("<br/>")}
-            </div>
-          `;
-        }
-
-        card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong style="font-size:13px;">Iteration ${it.iteration} — Headless Playwright + Argon Visual QA</strong>
-            <span class="status-badge ${isPass ? "pass" : "fail"}">${it.status}</span>
-          </div>
-
-          <div class="signals-grid">
-            <div class="signal-box">
-              <strong style="color:${ca.passed ? "var(--green)" : "var(--red)"};">
-                ${ca.passed ? "✓" : "✗"} Check A: Runtime & FPS
-              </strong>
-              Errors: ${ca.console_errors || 0} · Avg: ${ca.avg_fps || 58} FPS
-            </div>
-            <div class="signal-box">
-              <strong style="color:${cb.passed ? "var(--green)" : "var(--red)"};">
-                ${cb.passed ? "✓" : "✗"} Check B: ±50ms & Bounds
-              </strong>
-              Max Drift: ${cb.max_drift_ms}ms · Bounds OK: ${cb.character_bounds_ok ? "Yes" : "NO (Clipped)"}
-            </div>
-            <div class="signal-box">
-              <strong style="color:${cc.passed ? "var(--green)" : "var(--red)"};">
-                ${cc.passed ? "✓" : "✗"} Check C: Argon Proxy QA
-              </strong>
-              Score: ${cc.score || 0}/100 · ${cc.passed ? "Approved" : "Needs Patch"}
-            </div>
-          </div>
-
-          <div style="font-size:12px; color:#cbd5e1; margin-top:4px;">
-            <strong>Argon Critique:</strong> ${cc.summary || ""}
-          </div>
-
-          ${reasonsHtml}
-          ${framesHtml}
-          ${diffHtml}
-        `;
-        container.appendChild(card);
-      });
-
-      const gcsCount = Object.keys(job.gcs_urls || {}).length;
-      document.getElementById("gcs-status-text").textContent =
-        gcsCount > 0
-          ? `☁️ GCS Synced: ${gcsCount} artifacts in gs://h2gdm-hack26icn-2655-assets/musico/${job.job_id}/`
-          : `💾 Local Storage Ready: data/jobs/${job.job_id}/`;
-      document.getElementById("firestore-status-text").textContent =
-        job.firestore_synced
-          ? `🔥 Firestore: Synced (musico_jobs/${job.job_id})`
-          : `🔥 Firestore: Local State Active`;
-    }
-
     function seekSceneTo(tSec) {
       const iframe = document.getElementById("scene-iframe");
       if (iframe && iframe.contentWindow) {
         if (typeof iframe.contentWindow.__seek === "function") {
           const snap = iframe.contentWindow.__seek(tSec);
           document.getElementById("seek-status-readout").textContent =
-            `window.__seek(${tSec.toFixed(2)}s) → pose=${snap.pose}, inBounds=${snap.inBounds}`;
+            `⏱ ${tSec.toFixed(2)}초 위치로 이동`;
         } else {
           iframe.contentWindow.postMessage({ type: "MUSICO_SEEK", t: tSec }, "*");
           document.getElementById("seek-status-readout").textContent =
-            `postMessage MUSICO_SEEK(${tSec.toFixed(2)}s)`;
+            `⏱ ${tSec.toFixed(2)}초 위치로 이동`;
         }
       }
     }
@@ -960,30 +746,11 @@
       seekSceneTo(currentJob.score.climax.start + 0.15);
     }
 
-    async function runLivePipeline() {
-      const trackId = currentJob ? currentJob.track_id : "sugar_plum_fairy";
-      showToast(`Running Live Gemini 4 Argon Director + 3-Stage Verification for '${trackId}'...`);
-      try {
-        const res = await fetch("/api/run", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ track_id: trackId })
-        });
-        const newJob = await res.json();
-        currentJob = newJob;
-        await loadJobsList(newJob.job_id);
-        renderJobToStudio(newJob);
-        showToast(`Live Pipeline Completed: ${newJob.job_id} (Iter 1 FAIL → Patch → Iter 2 PASS!)`, 4000);
-      } catch (e) {
-        showToast(`Error running pipeline: ${e}`, 4000);
-      }
-    }
-
     async function redirectCurrentJob() {
       if (!currentJob) return;
       const promptInput = document.getElementById("redirect-prompt-input");
-      const prompt = promptInput.value.trim() || "Emphasize dramatic high-flying leaps and golden stardust bursts on every major cadence.";
-      showToast(`Re-directing '${currentJob.title}' with Gemini 4 Argon & verifying...`);
+      const prompt = promptInput.value.trim() || "무대에 화려한 점프와 파티클 효과를 추가해줘.";
+      showToast(`무대 연출을 적용하고 있습니다...`);
       try {
         const res = await fetch(`/api/jobs/${currentJob.job_id}/redirect`, {
           method: "POST",
@@ -995,23 +762,9 @@
         await loadJobsList(newJob.job_id);
         renderJobToStudio(newJob);
         promptInput.value = "";
-        showToast(`Re-Directed Scene Ready & Verified: ${newJob.job_id}!`, 4000);
+        showToast(`새로운 무대 연출이 준비되었습니다!`, 4000);
       } catch (e) {
-        showToast(`Error re-directing: ${e}`, 4000);
-      }
-    }
-
-    async function rerunVerification() {
-      if (!currentJob) return;
-      showToast(`Executing Headless Playwright + Argon Multimodal Verification on ${currentJob.job_id}...`);
-      try {
-        const res = await fetch(`/api/jobs/${currentJob.job_id}/verify`, { method: "POST" });
-        const updated = await res.json();
-        currentJob = updated;
-        renderJobToStudio(updated);
-        showToast(`Verification Loop Complete: Iteration 1 FAIL → Auto-Patch → Iteration 2 PASS!`, 4000);
-      } catch (e) {
-        showToast(`Verification error: ${e}`, 4000);
+        showToast(`연출 적용 중 오류가 발생했습니다: ${e}`, 4000);
       }
     }
 

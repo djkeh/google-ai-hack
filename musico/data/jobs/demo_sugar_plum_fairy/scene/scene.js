@@ -14,70 +14,67 @@ const SCORE_DATA = {
   "genre": "Classical / Chamber Music Box",
   "bpm": 120.2,
   "duration": 32.0,
-  "director_summary": "A crystalline music-box ballet in four acts: we open in a hushed violet proscenium as Aurelia tiptoes to the iconic descending celesta motif, transition into buoyant syncopated leaps during the arpeggiated development, erupt into a golden stardust storm during the rapid tremolo climax, and dissolve into a suspended porcelain stillness on the final harmonic chimes.",
+  "director_summary": "A crystalline music-box staging where Aurelia awakens in a hushed violet theater, tiptoes across chromatic celesta descents, leaps through staccato woodwind arpeggios, and erupts into a golden stardust grand-jeté climax when the full harmonic tremolos bloom at 17.0s.",
   "character": {
     "name": "Aurelia the Sugar-Plum Sprite",
-    "concept": "A translucent porcelain-and-amethyst clockwork ballerina who awakens inside a velvet music box, channeling every celesta pluck and crystalline tremolo through delicate, spring-loaded ballet choreography.",
+    "concept": "A translucent porcelain-and-starlight ballerina who lives inside an enchanted Victorian celesta mechanism, converting bell chimes into crystalline light.",
     "archetype": "celestial_fairy",
     "palette": [
       "#F9D5E5",
       "#C77DFF",
       "#5A189A",
-      "#FFD166",
+      "#FFE57F",
       "#E0AAFF"
     ],
-    "style": "Crystalline paper-cut theater with glowing filigree edges, volumetric stardust motes, and refracted prism highlights",
+    "style": "Luminous geometric storybook ballet with glass-refraction wings and glowing filigree",
     "accessories": [
-      "Spun-glass tutu with gold leaf trim",
-      "Floating clockwork crown",
-      "Prism-tipped wand",
-      "Iridescent gossamer wings"
+      "Prismatic tutu",
+      "Starlight tiara",
+      "Chime-ribbon wand"
     ]
   },
   "sections": [
     {
       "id": "sec_1",
-      "name": "Hushed Celesta Prelude",
+      "name": "Hushed Pizzicato & Chromatic Prelude",
       "start": 0.0,
       "end": 9.47,
-      "mood": "Mysterious, tiptoeing, delicate and hushed",
+      "mood": "Delicate, mysterious, tiptoeing",
       "energy": 0.25,
       "motion_vocab": [
         "idle",
         "bounce",
         "step_left",
-        "step_right",
-        "hold"
+        "step_right"
       ],
-      "background": "Dimly lit violet velvet music-box stage with slowly turning brass gears in the shadows",
+      "background": "Dimmed velvet music-box stage with softly rotating brass gears",
       "camera": "slow_drift",
       "particle_theme": "crystal_drops"
     },
     {
       "id": "sec_2",
-      "name": "Arpeggiated Woodwind & Celesta Dialogue",
+      "name": "Sparkling Arpeggio Development",
       "start": 9.47,
       "end": 16.97,
-      "mood": "Playful, inquisitive, rhythmically buoyant",
-      "energy": 0.58,
+      "mood": "Playful, nimble, ascending tension",
+      "energy": 0.6,
       "motion_vocab": [
         "step_left",
         "step_right",
-        "bounce",
         "arms_up",
         "spin",
         "jump"
       ],
-      "background": "Frost-etched glass arches illuminating in sync with rising arpeggio figures",
+      "background": "Crystalline arches illuminating in sync with rising woodwind figures",
       "camera": "beat_pulse",
       "particle_theme": "stardust"
     },
     {
       "id": "sec_3",
-      "name": "Fortissimo Crystalline Tremolo Climax",
+      "name": "Grand Celesta & Tremolo Climax",
       "start": 16.97,
       "end": 26.98,
-      "mood": "Dazzling, urgent, euphoric and virtuosic",
+      "mood": "Radiant, euphoric, virtuosic",
       "energy": 0.95,
       "motion_vocab": [
         "spin",
@@ -85,24 +82,23 @@ const SCORE_DATA = {
         "arms_up",
         "bounce"
       ],
-      "background": "Radiant golden-violet cathedral of refracted light beams and spinning celestial rings",
+      "background": "Full golden aurora dome with cascading chime constellations",
       "camera": "dynamic_zoom",
       "particle_theme": "aurora_sparks"
     },
     {
       "id": "sec_4",
-      "name": "Porcelain Music-Box Dissolve",
+      "name": "Dissolving Music-Box Coda",
       "start": 26.98,
       "end": 32.0,
-      "mood": "Wistful, fragile, winding down to stillness",
-      "energy": 0.15,
+      "mood": "Poised, ethereal, fading to stillness",
+      "energy": 0.2,
       "motion_vocab": [
         "step_left",
-        "arms_up",
         "hold",
         "idle"
       ],
-      "background": "Fading twilight proscenium with a single spotlight narrowing on the porcelain pedestal",
+      "background": "Twilight violet fade with suspended crystal motes",
       "camera": "slow_drift",
       "particle_theme": "crystal_drops"
     }
@@ -113,20 +109,20 @@ const SCORE_DATA = {
       "raw_t": 2.0,
       "t": 2.0201,
       "snap_delta_ms": 20.1,
-      "action": "step_left",
-      "intensity": 0.65,
-      "trigger": "onset=0.79 (entry of the iconic high G-E celesta motif)",
-      "why": "After the four plucked bass pizzicato beats set the hush, the first high celesta note enters at 2.02s; Aurelia awakens from her clockwork slumber with a crisp tiptoe step left."
+      "action": "bounce",
+      "intensity": 0.55,
+      "trigger": "onset=0.79 (celesta motif entry)",
+      "why": "The iconic high G-F# celesta bell enters after the sparse pizzicato intro; Aurelia awakens from her music-box slumber with a crisp, bell-like curtsey bounce."
     },
     {
       "id": "cue_02",
       "raw_t": 2.5,
       "t": 2.531,
       "snap_delta_ms": 31.0,
-      "action": "bounce",
-      "intensity": 0.85,
-      "trigger": "onset=1.00 (peak accent of opening descending phrase)",
-      "why": "The strongest onset of the prelude lands on the D# celesta accent; Aurelia performs a delicate knee-plié bounce that sends a ripple of crystal drops across the floor."
+      "action": "step_left",
+      "intensity": 0.75,
+      "trigger": "onset=1.00 (peak chromatic accent)",
+      "why": "Strongest onset of the opening phrase lands on the descending chromatic step; Aurelia tiptoes left in exact sync with the pointed staccato articulation."
     },
     {
       "id": "cue_03",
@@ -134,9 +130,9 @@ const SCORE_DATA = {
       "t": 4.2493,
       "snap_delta_ms": -184.0,
       "action": "step_right",
-      "intensity": 0.75,
-      "trigger": "onset=0.83 (chromatic descending step in main theme)",
-      "why": "As the melody creeps chromatically downward, Aurelia mirrors the harmonic tension by tiptoeing right across the stage with poised curiosity."
+      "intensity": 0.7,
+      "trigger": "onset=0.83 (answering phrase accent)",
+      "why": "The second descending celesta statement mirrors the first one step lower, prompting a symmetrical counter-step to the right to balance the stage composition."
     },
     {
       "id": "cue_04",
@@ -144,9 +140,9 @@ const SCORE_DATA = {
       "t": 6.5016,
       "snap_delta_ms": 128.0,
       "action": "arms_up",
-      "intensity": 0.7,
-      "trigger": "onset=0.77 (questioning cadence of the A-phrase)",
-      "why": "The descending line reaches its low questioning resolution; Aurelia raises her porcelain arms into fifth position, holding the suspense before the B-section."
+      "intensity": 0.65,
+      "trigger": "onset=0.77 (cadential bell lift)",
+      "why": "As the descending chromatic line reaches its lower register turn, Aurelia raises her chime-wand overhead to catch the lingering harmonic overtones."
     },
     {
       "id": "cue_05",
@@ -154,9 +150,9 @@ const SCORE_DATA = {
       "t": 9.5202,
       "snap_delta_ms": 20.2,
       "action": "jump",
-      "intensity": 0.9,
-      "trigger": "onset=0.91 (bright ascending arpeggio burst launching Section 2)",
-      "why": "At 9.52s the arrangement shifts into rapid upward arpeggios; Aurelia leaps into the air on the high woodwind/celesta accent, igniting the stardust particle layer."
+      "intensity": 0.85,
+      "trigger": "onset=0.91 (Section B arpeggio launch)",
+      "why": "A sudden burst of rapid ascending arpeggios breaks the hushed prelude at 9.52s; Aurelia launches into a buoyant leap that inaugurates the playful development section."
     },
     {
       "id": "cue_06",
@@ -164,9 +160,9 @@ const SCORE_DATA = {
       "t": 11.5171,
       "snap_delta_ms": 17.1,
       "action": "spin",
-      "intensity": 0.82,
-      "trigger": "onset=0.80 (second answered arpeggio flourish)",
-      "why": "The repeating call-and-response arpeggio peaks again at 11.52s; a brisk pirouette translates the swirling sixteenth-note figure into rotational motion."
+      "intensity": 0.8,
+      "trigger": "onset=0.80 (sparkling triplet flourish)",
+      "why": "Repeating bell-like arpeggio figures swirl upward in pitch; a rapid pirouette visually translates the circular melodic figure into spinning stardust trails."
     },
     {
       "id": "cue_07",
@@ -174,29 +170,29 @@ const SCORE_DATA = {
       "t": 14.0016,
       "snap_delta_ms": -115.0,
       "action": "jump",
-      "intensity": 0.85,
-      "trigger": "onset=0.78 (sequential harmonic climb in development)",
-      "why": "As the repeated motif builds urgency toward the climax, Aurelia executes a syncopated grand jeté right on the downbeat accent."
+      "intensity": 0.82,
+      "trigger": "onset=0.78 (sequential harmonic climb)",
+      "why": "The sequential pattern intensifies toward the climax; a second high leap punctuates the crest of the arpeggio wave."
     },
     {
       "id": "cue_08",
-      "raw_t": 17.0,
-      "t": 16.997,
-      "snap_delta_ms": -3.0,
+      "raw_t": 15.9105,
+      "t": 15.9985,
+      "snap_delta_ms": 88.0,
       "action": "spin",
-      "intensity": 1.0,
-      "trigger": "onset=0.76 (sweeping harp/celesta glissando into the fortissimo climax)",
-      "why": "A rapid ascending glissando at 17.0s unleashes the high-energy tremolo climax; Aurelia launches into a dazzling golden stardust spin as the camera zooms in."
+      "intensity": 0.88,
+      "trigger": "onset=0.80 (pre-climax glissando preparation)",
+      "why": "Tension peaks right before the sweeping upward run; Aurelia coils into a fast preparatory spin that gathers golden particles toward the center of the stage."
     },
     {
       "id": "cue_09",
-      "raw_t": 28.0,
-      "t": 28.0265,
-      "snap_delta_ms": 26.5,
+      "raw_t": 17.0,
+      "t": 16.997,
+      "snap_delta_ms": -3.0,
       "action": "arms_up",
-      "intensity": 0.55,
-      "trigger": "onset=0.63 (sparse high-register bell notes in outro)",
-      "why": "The rapid tremolos vanish into isolated, echoing music-box chimes; Aurelia slows her motion and lifts her arms in a wistful farewell arch."
+      "intensity": 1.0,
+      "trigger": "onset=0.76 (sweeping harp/celesta glissando into Climax)",
+      "why": "A brilliant ascending glissando erupts at 17.0s into sustained fortissimo tremolos; throwing both arms skyward unleashes the full golden aurora burst at the exact structural downbeat."
     },
     {
       "id": "cue_10",
@@ -204,16 +200,16 @@ const SCORE_DATA = {
       "t": 30.0234,
       "snap_delta_ms": 23.4,
       "action": "hold",
-      "intensity": 0.95,
-      "trigger": "onset=1.00 (final resonant E-minor celesta chime)",
-      "why": "On the final crystalline strike at 30.02s, Aurelia freezes in a balanced arabesque silhouette while the violet stage lights slowly fade to black."
+      "intensity": 0.9,
+      "trigger": "onset=1.00 (final resonant chime cadence)",
+      "why": "The final solitary E-minor celesta bell rings out at 30.02s and decays into silence; Aurelia freezes in a crystalline reverence pose as the music box winds down."
     }
   ],
   "climax": {
     "start": 16.97,
     "end": 26.98,
-    "description": "Following the sweeping upward glissando at 17.0s, the texture doubles in density and brightness (avg_energy 0.421, avg_brightness 0.455) with continuous mandolin-like celesta tremolos descending and ascending through dramatic harmonic shifts.",
-    "visual_boost": "Golden stardust storm + 1.25x dynamic camera zoom + amethyst halo bloom + continuous ribbon trails"
+    "description": "Triggered by a sweeping upward glissando at 16.97s, the texture shifts from sparse staccato notes to dense, shimmering upper-register tremolos with nearly 3x the average energy and spectral brightness of the intro.",
+    "visual_boost": "Golden aurora stardust storm + 1.25x dynamic camera zoom + radiant halo bloom around Aurelia's wings"
   }
 };
 const FEATURES_DATA = {
