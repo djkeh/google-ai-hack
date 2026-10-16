@@ -67,19 +67,27 @@ function addTask() {
   updateHeaderMetrics();
 }
 
+// BUG 1 (bug-counter-desync):
+// Deleting a task removes its DOM card directly, but forgets to remove the task
+// from `state.tasks` and recompute `updateHeaderMetrics()`.
+// As a result, #active-count stays at 3 and #velocity-pts stays at 21!
 function deleteTask(taskId) {
   state.tasks = state.tasks.filter((t) => t.id !== taskId);
   renderTasks();
   updateHeaderMetrics();
 }
 
+// BUG 2 (bug-discount-nan):
+// Entering a percentage string like "15%" causes Number("15%") -> NaN,
+// rendering "$NaN" in #estimate-total and logging an error banner.
 function calculateEstimate() {
   const hours = Number(document.getElementById('est-hours').value);
   const rate = Number(document.getElementById('est-rate').value);
   const rawDiscount = document.getElementById('est-discount').value.trim();
 
+  // Fixed parsing: strip '%' symbol before converting to Number
   const cleanedDiscount = rawDiscount.replace(/%/g, '').trim();
-  const discountPct = Number(cleanedDiscount);
+  const discountPct = cleanedDiscount === '' ? 0 : Number(cleanedDiscount);
 
   const subtotal = hours * rate;
   const finalTotal = subtotal * (1 - discountPct / 100);

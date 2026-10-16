@@ -16,6 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent
 ROOT_ENV = BASE_DIR.parent / ".env"
 if ROOT_ENV.exists():
     load_dotenv(ROOT_ENV, override=False)
+_adc_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+if _adc_path and not Path(_adc_path).exists():
+    os.environ.pop("GOOGLE_APPLICATION_CREDENTIALS", None)
 
 DATA_DIR = BASE_DIR / "data"
 JOBS_DIR = DATA_DIR / "jobs"
@@ -26,7 +29,7 @@ for d in (DATA_DIR, JOBS_DIR, SANDBOXES_DIR, RECORDINGS_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "h2gdm-hack26icn-2655")
-GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME", "h2gdm-hack26icn-2655-assets")
+GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME") or os.environ.get("GCS_BUCKET", "h2gdm-hack26icn-2655-assets")
 FIRESTORE_COLLECTION = "reprofix_jobs"
 
 _gcs_client = None

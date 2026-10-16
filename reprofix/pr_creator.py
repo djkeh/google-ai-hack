@@ -13,6 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent
 ROOT_ENV = BASE_DIR.parent / ".env"
 if ROOT_ENV.exists():
     load_dotenv(ROOT_ENV, override=False)
+_adc_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+if _adc_path and not Path(_adc_path).exists():
+    os.environ.pop("GOOGLE_APPLICATION_CREDENTIALS", None)
 
 DEMO_REPO_URL = os.environ.get("DEMO_REPO_URL", "https://github.com/djkeh/google-ai-hack")
 CREDENTIAL_ID = "reprofix-github-pat"
