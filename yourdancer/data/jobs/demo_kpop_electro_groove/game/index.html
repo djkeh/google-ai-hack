@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YourDancer — 4-Lane Choreography Rhythm Game</title>
+  <style>
+    :root {
+      --bg: #070913;
+      --panel: rgba(15, 20, 38, 0.88);
+      --cyan: #00f5d4;
+      --magenta: #ff2a85;
+      --amber: #fee440;
+      --violet: #a855f7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: rgba(10, 14, 28, 0.95);
+      border-bottom: 1px solid rgba(0, 245, 212, 0.25);
+      z-index: 10;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .song-info h1 { font-size: 15px; font-weight: 700; color: var(--cyan); }
+    .song-info p { font-size: 11px; color: var(--muted); }
+    .hud-stats {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .stat-box { text-align: center; }
+    .stat-box span { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; }
+    .stat-box strong { font-size: 16px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
+    .controls-bar {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    button {
+      background: rgba(30, 41, 69, 0.9);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    button:hover { border-color: var(--cyan); color: #fff; }
+    button.active {
+      background: var(--cyan);
+      color: #060913;
+      border-color: var(--cyan);
+    }
+    .btn-primary {
+      background: var(--magenta);
+      border-color: var(--magenta);
+      color: #fff;
+    }
+    #stage-container {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #05070f;
+      overflow: hidden;
+    }
+    #dance-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.52;
+      pointer-events: none;
+    }
+    #game-canvas {
+      position: relative;
+      z-index: 2;
+      max-width: 100%;
+      max-height: 100%;
+      border-left: 1px solid rgba(255,255,255,0.1);
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .touch-controls {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 6px 16px;
+      background: rgba(8, 11, 22, 0.95);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      z-index: 10;
+    }
+    .touch-pad {
+      padding: 8px 4px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      border-radius: 6px;
+      user-select: none;
+    }
+    .pad-0 { border: 1px solid var(--cyan); color: var(--cyan); }
+    .pad-1 { border: 1px solid var(--magenta); color: var(--magenta); }
+    .pad-2 { border: 1px solid var(--amber); color: var(--amber); }
+    .pad-3 { border: 1px solid var(--violet); color: var(--violet); }
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 8, 18, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .hidden { display: none !important; }
+    .results-card {
+      background: #0f1629;
+      border: 1px solid rgba(0, 245, 212, 0.45);
+      border-radius: 12px;
+      max-width: 620px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .rank-badge {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--cyan);
+      line-height: 1;
+      padding: 6px 16px;
+      border: 2px solid var(--cyan);
+      border-radius: 10px;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .res-metric {
+      background: rgba(255,255,255,0.04);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .res-metric span { font-size: 11px; color: var(--muted); display: block; }
+    .res-metric strong { font-size: 20px; color: #fff; }
+    .missed-box {
+      margin-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 10px;
+    }
+    .missed-box h3 {
+      font-size: 12px;
+      color: var(--amber);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    #missed-moves-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .practice-chip {
+      text-align: left;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(254, 228, 64, 0.35);
+      font-size: 12px;
+      color: #f8fafc;
+    }
+    .practice-chip .chip-time { color: var(--cyan); font-family: monospace; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="song-info">
+      <h1 id="song-title">Loading Chart...</h1>
+      <p id="song-meta">4-Lane Limb Choreography Rhythm Game</p>
+    </div>
+    <div class="hud-stats">
+      <div class="stat-box"><span>Score</span><strong id="hud-score">0</strong></div>
+      <div class="stat-box"><span>Combo</span><strong id="hud-combo">0x</strong></div>
+      <div class="stat-box"><span>Mult</span><strong id="hud-mult">1.0x</strong></div>
+      <div class="stat-box"><span>Accuracy</span><strong id="hud-acc">100.0%</strong></div>
+    </div>
+    <div class="controls-bar">
+      <button class="diff-btn" data-diff="Easy">Easy</button>
+      <button class="diff-btn active" data-diff="Normal">Normal</button>
+      <button class="diff-btn" data-diff="Hard">Hard</button>
+      <button id="btn-autoplay">AUTO-PLAY: OFF</button>
+      <button id="btn-start" class="btn-primary">PLAY ROUTINE</button>
+      <button id="btn-results">RESULTS</button>
+    </div>
+  </header>
+
+  <div id="stage-container">
+    <video id="dance-video" src="video.mp4" playsinline preload="auto" muted></video>
+    <canvas id="game-canvas" width="760" height="430"></canvas>
+
+    <div id="results-modal" class="modal-overlay hidden">
+      <div class="results-card">
+        <div class="results-header">
+          <div>
+            <h2 style="font-size: 18px;">Routine Performance Report</h2>
+            <p id="res-breakdown" style="font-size: 12px; color: var(--muted); margin-top: 4px;"></p>
+          </div>
+          <div id="res-rank" class="rank-badge">S</div>
+        </div>
+        <div class="results-grid">
+          <div class="res-metric"><span>Total Score</span><strong id="res-score">0</strong></div>
+          <div class="res-metric"><span>Accuracy</span><strong id="res-acc">100.0%</strong></div>
+          <div class="res-metric"><span>Max Combo</span><strong id="res-combo">0x</strong></div>
+        </div>
+        <div class="missed-box">
+          <h3 id="missed-section-title">Missed Move Practice Timestamps</h3>
+          <div id="missed-moves-list"></div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
+          <button id="btn-close-results" class="btn-primary">Resume / Practice Video</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="touch-controls">
+    <button class="touch-pad pad-0" data-lane="0">[D] LEFT ARM</button>
+    <button class="touch-pad pad-1" data-lane="1">[F] RIGHT ARM</button>
+    <button class="touch-pad pad-2" data-lane="2">[J] LEFT LEG</button>
+    <button class="touch-pad pad-3" data-lane="3">[K] RIGHT LEG</button>
+  </div>
+
+  <script src="judge.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
