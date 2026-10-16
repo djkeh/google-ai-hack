@@ -1,0 +1,202 @@
+{
+  "title": "Neon Pulse (Cyberpunk Etude)",
+  "genre": "Electronic / Synthwave",
+  "bpm": 129.2,
+  "duration": 32.0,
+  "director_summary": "A high-energy cyberpunk performance where Kaelen Vex, a neon-clad android dancer, locks into a 129 BPM synth arpeggio on a rain-slicked holographic rooftop. The choreography progresses from precise robotic isolation steps during the muted arpeggio intro, winds up through a high-frequency snare and pitch-riser buildup, and explodes into anti-gravity shockwave leaps and rapid spins when the full sub-bass and saw-lead drop at 16.6s, before powering down into a glowing stasis pose as the synth echoes fade.",
+  "character": {
+    "name": "Kaelen Vex, the Neon Cyber-Dancer",
+    "concept": "An agile, street-smart android street dancer with articulated carbon-fiber joints and sound-reactive LED circuitry embedded in a cropped tech-jacket, performing atop a rain-swept cyberpunk skyscraper.",
+    "archetype": "cyber_dancer",
+    "palette": [
+      "#00F5D4",
+      "#FF007F",
+      "#7B2CBF",
+      "#0D0E15",
+      "#FEE440"
+    ],
+    "style": "High-contrast cyberpunk vector anime with glowing neon rim-lighting, chromatic aberration accents, and wet rooftop reflections.",
+    "accessories": [
+      "Holographic LED visor",
+      "Plasma-core kinetic sneakers",
+      "Floating neon charge rings",
+      "Fiber-optic dreadlock cables"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec_1",
+      "name": "Arpeggio Boot-Up & Snare Ignition",
+      "start": 0.0,
+      "end": 12.26,
+      "mood": "Mechanical, focused, and steadily awakening",
+      "energy": 0.35,
+      "motion_vocab": [
+        "idle",
+        "bounce",
+        "step_left",
+        "step_right"
+      ],
+      "background": "Dark rain-slicked holographic rooftop with a dim cyan wireframe grid pulsing to the muted synth arpeggio",
+      "camera": "slow_drift",
+      "particle_theme": "neon_grid"
+    },
+    {
+      "id": "sec_2",
+      "name": "High-Voltage Riser & Charge Sequence",
+      "start": 12.26,
+      "end": 16.6,
+      "mood": "Urgent, accelerating, and high-tension",
+      "energy": 0.78,
+      "motion_vocab": [
+        "spin",
+        "arms_up",
+        "bounce"
+      ],
+      "background": "Vertigo-inducing neon sky-billboards flickering rapidly in magenta and yellow as energy conduits surge upward",
+      "camera": "beat_pulse",
+      "particle_theme": "aurora_sparks"
+    },
+    {
+      "id": "sec_3",
+      "name": "Overdrive Cyber-Drop Climax",
+      "start": 16.6,
+      "end": 26.94,
+      "mood": "Explosive, euphoric, and kinetic",
+      "energy": 0.98,
+      "motion_vocab": [
+        "jump",
+        "spin",
+        "step_left",
+        "step_right",
+        "arms_up"
+      ],
+      "background": "Full-spectrum holographic cityscape overload with shockwave ripples expanding across the wet rooftop floor on every beat",
+      "camera": "dynamic_zoom",
+      "particle_theme": "neon_grid"
+    },
+    {
+      "id": "sec_4",
+      "name": "System Cooldown & Neon Fade",
+      "start": 26.94,
+      "end": 32.0,
+      "mood": "Cool, atmospheric, and resolving",
+      "energy": 0.18,
+      "motion_vocab": [
+        "hold",
+        "idle"
+      ],
+      "background": "Mist-shrouded cyberpunk skyline settling into deep violet twilight as lingering digital rain drifts down",
+      "camera": "slow_drift",
+      "particle_theme": "crystal_drops"
+    }
+  ],
+  "events": [
+    {
+      "id": "cue_01",
+      "raw_t": 1.4,
+      "t": 1.4164,
+      "snap_delta_ms": 16.4,
+      "action": "step_left",
+      "intensity": 0.35,
+      "trigger": "onset=0.294 (low synth arpeggio downbeat)",
+      "why": "As the clean 129 BPM synth arpeggio establishes its foundational pulse, Kaelen executes a crisp robotic isolation step to the left, locking his glowing sneakers into the grid."
+    },
+    {
+      "id": "cue_02",
+      "raw_t": 4.7,
+      "t": 4.7137,
+      "snap_delta_ms": 13.7,
+      "action": "step_right",
+      "intensity": 0.4,
+      "trigger": "onset=0.309 (arpeggio phrase repeat accent)",
+      "why": "On the second four-bar arpeggio cycle, Kaelen mirrors his mechanical groove with a sharp step right, sending a cyan ripple across the wet rooftop surface."
+    },
+    {
+      "id": "cue_03",
+      "raw_t": 9.0,
+      "t": 9.0326,
+      "snap_delta_ms": 32.6,
+      "action": "bounce",
+      "intensity": 0.7,
+      "trigger": "onset=0.678 (quarter-note snare build entrance)",
+      "why": "Sharp electronic snare hits suddenly enter the mix and begin climbing in pitch; Kaelen drops his center of gravity into a sharp hydraulic bounce to absorb the sudden rhythmic impact."
+    },
+    {
+      "id": "cue_04",
+      "raw_t": 9.95,
+      "t": 9.9614,
+      "snap_delta_ms": 11.4,
+      "action": "arms_up",
+      "intensity": 0.88,
+      "trigger": "onset=0.923 (snare build peak accent)",
+      "why": "As the quarter-note snare strikes reach peak transient force, Kaelen thrusts both arms skyward to summon twin holographic charge rings around his wrists."
+    },
+    {
+      "id": "cue_05",
+      "raw_t": 12.3,
+      "t": 12.3066,
+      "snap_delta_ms": 6.6,
+      "action": "spin",
+      "intensity": 0.95,
+      "trigger": "onset=1.000 (double-time snare subdivision transition)",
+      "why": "The snare roll doubles its speed at the maximum onset peak of the track (1.000), propelling Kaelen into a high-velocity vortex spin that trails ribbons of magenta plasma."
+    },
+    {
+      "id": "cue_06",
+      "raw_t": 14.4,
+      "t": 14.4196,
+      "snap_delta_ms": 19.6,
+      "action": "arms_up",
+      "intensity": 0.9,
+      "trigger": "onset=0.470 (16th-note snare riser surge)",
+      "why": "During the frantic 16th-note snare acceleration and rising synth sweep, Kaelen locks into an overhead power-charge stance as sparks arc across his visor."
+    },
+    {
+      "id": "cue_07",
+      "raw_t": 18.7,
+      "t": 18.7153,
+      "snap_delta_ms": 15.3,
+      "action": "jump",
+      "intensity": 1.0,
+      "trigger": "onset=0.256 (climax high-lead melodic peak)",
+      "why": "With the main drop in full swing, the piercing synth lead hits its upper-register hook and sub-bass pulse; Kaelen launches into an anti-gravity shockwave leap that shatters the holographic floor grid."
+    },
+    {
+      "id": "cue_08",
+      "raw_t": 21.1,
+      "t": 21.1069,
+      "snap_delta_ms": 6.9,
+      "action": "spin",
+      "intensity": 0.92,
+      "trigger": "onset=0.316 (climax second phrase turnaround)",
+      "why": "At the midpoint turnaround of the drop melody, Kaelen whips into a razor-sharp 360-degree cyber-spin, synchronizing with the bright synth syncopation."
+    },
+    {
+      "id": "cue_09",
+      "raw_t": 24.3,
+      "t": 24.3345,
+      "snap_delta_ms": 34.5,
+      "action": "jump",
+      "intensity": 0.98,
+      "trigger": "onset=0.296 (final climax octave leap)",
+      "why": "As the lead synth makes its final climactic ascent before the outro, Kaelen executes one last high-voltage leap with maximum neon bloom and camera zoom."
+    },
+    {
+      "id": "cue_10",
+      "raw_t": 27.1,
+      "t": 27.1441,
+      "snap_delta_ms": 44.1,
+      "action": "hold",
+      "intensity": 0.3,
+      "trigger": "onset=0.304 (outro chord resolution & sub-bass cutoff)",
+      "why": "The driving beat cuts out abruptly, leaving only soft, bell-like synth arpeggio echoes; Kaelen freezes in an iconic silhouette pose as his LED circuits slowly dim into standby mode."
+    }
+  ],
+  "climax": {
+    "start": 16.6,
+    "end": 26.94,
+    "description": "Following the intense snare roll and pitch-riser buildup, the track erupts at 16.6s into its highest sustained energy section (0.49 avg energy) featuring a soaring high-octave synth lead over a driving four-on-the-floor bassline. Kaelen unleashes his full aerial vocabulary—leaping and spinning in sync with the melodic peaks.",
+    "visual_boost": "Dual cyan-magenta shockwave rings on beat + 1.3x dynamic camera zoom + intense neon visor bloom and rain-splash particle overdrive"
+  }
+}

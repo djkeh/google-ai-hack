@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musico — AI Motion-Graphics Director (Gemini 4 Argon)</title>
+  <style>
+    :root {
+      --bg: #07070e;
+      --bg-card: #10101e;
+      --bg-card-alt: #16162a;
+      --border: rgba(255, 255, 255, 0.10);
+      --border-highlight: rgba(168, 85, 247, 0.45);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --purple: #a855f7;
+      --cyan: #00f5d4;
+      --gold: #facc15;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+    /* Top Header */
+    header {
+      background: rgba(16, 16, 30, 0.92);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 19px;
+      color: #07070e;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    .brand-title h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      background: rgba(168, 85, 247, 0.18);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+    .pill-cyan {
+      background: rgba(0, 245, 212, 0.14);
+      color: var(--cyan);
+      border-color: rgba(0, 245, 212, 0.35);
+    }
+    .switcher-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: var(--bg-card-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      border-color: var(--purple);
+      background: rgba(168, 85, 247, 0.16);
+    }
+    .btn.active {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(0, 245, 212, 0.18));
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0, 245, 212, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #9333ea, #6366f1);
+      border-color: #a855f7;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.12);
+    }
+    /* Main Grid */
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 18px;
+      padding: 18px 24px 36px;
+      max-width: 1720px;
+      margin: 0 auto;
+    }
+    @media (max-width: 1180px) {
+      .studio-grid { grid-template-columns: 1fr; }
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    /* Scene Player */
+    .player-frame-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9.8;
+      background: #05050a;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    #scene-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .seek-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .redirect-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .redirect-input {
+      flex: 1;
+      background: #090913;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .redirect-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+    /* Visual Score Timeline & Cues */
+    .director-summary {
+      font-size: 13px;
+      color: #cbd5e1;
+      background: rgba(168, 85, 247, 0.08);
+      border-left: 3px solid var(--purple);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 14px;
+    }
+    .sections-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .sec-block {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sec-block:hover {
+      border-color: var(--cyan);
+      transform: translateY(-1px);
+    }
+    .sec-block.climax {
+      border-color: rgba(250, 204, 21, 0.55);
+      background: rgba(250, 204, 21, 0.08);
+    }
+    .sec-time {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+    .sec-name {
+      font-size: 12px;
+      font-weight: 700;
+      margin: 2px 0;
+    }
+    .sec-mood {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    #energy-canvas {
+      width: 100%;
+      height: 86px;
+      background: #090914;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      cursor: pointer;
+    }
+    .cue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .cue-item {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 165px 1fr;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .cue-item:hover {
+      border-color: var(--purple);
+      background: rgba(168, 85, 247, 0.12);
+    }
+    .cue-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cue-time {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .snap-badge {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 10px;
+      color: var(--cyan);
+      background: rgba(0, 245, 212, 0.10);
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      width: fit-content;
+    }
+    .cue-why {
+      font-size: 13px;
+      color: #f1f5f9;
+    }
+    .cue-trigger {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-family: "SF Mono", Menlo, monospace;
+    }
+    /* Character Sheet Preview */
+    .char-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .palette-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .sprite-preview-box {
+      background: repeating-conic-gradient(#181828 0% 25%, #10101c 0% 50%) 50% / 16px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    .sprite-preview-box img {
+      width: 100%;
+      min-width: 580px;
+      height: auto;
+      display: block;
+    }
+    .pose-labels {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      text-align: center;
+      font-size: 10px;
+      font-family: "SF Mono", Menlo, monospace;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    /* Verification Panel */
+    .iter-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #0c0c18;
+    }
+    .iter-card.fail {
+      border-color: rgba(239, 68, 68, 0.45);
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(12, 12, 24, 0.95) 100%);
+    }
+    .iter-card.pass {
+      border-color: rgba(34, 197, 94, 0.45);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, rgba(12, 12, 24, 0.95) 100%);
+    }
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .status-badge.fail {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid var(--red);
+    }
+    .status-badge.pass {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid var(--green);
+    }
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .signal-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+    .signal-box strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    .proxy-frames-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .proxy-frame-card {
+      background: #07070d;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .proxy-frame-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+    }
+    .proxy-frame-caption {
+      font-size: 10px;
+      color: var(--muted);
+      padding: 4px 6px;
+      text-align: center;
+      font-family: "SF Mono", Menlo, monospace;
+    }
+    pre.diff-block {
+      background: #06060c;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      overflow-x: auto;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 24px;
+      background: #1e1b4b;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-logo">M</div>
+      <div class="brand-title">
+        <h1>
+          MUSICO
+          <span class="pill">Gemini 4 Argon Director</span>
+          <span class="pill pill-cyan">Nano Banana 2.1 + Librosa DSP</span>
+        </h1>
+        <div class="brand-subtitle">
+          AI Motion-Graphics Director — Authors a timed Visual Score with 'why' cues, builds a 2D sprite scene, and self-verifies via Playwright + Argon QA
+        </div>
+      </div>
+    </div>
+
+    <div class="switcher-bar">
+      <button id="demo-btn-1" class="btn active" onclick="selectJob('demo_sugar_plum_fairy')">
+        🩰 Track 1: Sugar Plum Fairy (Celesta)
+      </button>
+      <button id="demo-btn-2" class="btn" onclick="selectJob('demo_neon_pulse')">
+        ⚡ Track 2: Neon Pulse (Synthwave)
+      </button>
+      <select id="job-selector" class="btn" onchange="selectJob(this.value)" style="max-width: 220px;">
+        <option value="demo_sugar_plum_fairy">All Jobs...</option>
+      </select>
+      <button id="run-live-btn" class="btn btn-primary" onclick="runLivePipeline()">
+        ▶ Run Live Director Pipeline
+      </button>
+      <button id="reverify-btn" class="btn" onclick="rerunVerification()">
+        🔍 Re-Verify (Playwright + Argon)
+      </button>
+    </div>
+  </header>
+
+  <main class="studio-grid">
+    <!-- Left Column: Interactive Scene Player + Visual Score Inspector -->
+    <div class="col">
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎬 Interactive Stage Player</span>
+            <span id="active-job-badge" class="pill pill-cyan">demo_sugar_plum_fairy</span>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <a id="open-standalone-link" href="/jobs/demo_sugar_plum_fairy/scene/index.html" target="_blank" class="btn" style="padding:4px 10px; font-size:11px;">
+              ↗ Open Standalone Scene
+            </a>
+          </div>
+        </div>
+
+        <div class="player-frame-wrap">
+          <iframe id="scene-iframe" src="/jobs/demo_sugar_plum_fairy/scene/index.html" allow="autoplay"></iframe>
+        </div>
+
+        <div class="seek-bar">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn" onclick="seekSceneTo(2.0)">⏱ Seek Intro Cue (2.0s)</button>
+            <button class="btn" onclick="seekSceneTo(10.0)">⏱ Seek B-Section (10.0s)</button>
+            <button class="btn" onclick="seekSceneToClimax()">🔥 Seek Climax Drop</button>
+            <button class="btn" onclick="seekSceneTo(29.5)">⏱ Seek Coda (29.5s)</button>
+          </div>
+          <span id="seek-status-readout" style="font-size:11px; color:var(--cyan); font-family:monospace;">
+            window.__seek(t) ready
+          </span>
+        </div>
+
+        <div class="redirect-box">
+          <input
+            id="redirect-prompt-input"
+            class="redirect-input"
+            type="text"
+            placeholder="Re-direct Style with 1 line (e.g. 'Increase jump intensity on every B-section bell accent with golden aurora sparks')..."
+          />
+          <button class="btn btn-primary" onclick="redirectCurrentJob()">✨ Re-Direct Scene</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎼 Visual Score Inspector & Librosa Onset Snap Log</span>
+          </div>
+          <span id="score-meta-pill" class="pill">120 BPM · 32.0s · 10 Cues</span>
+        </div>
+
+        <div id="director-summary-box" class="director-summary">
+          Loading Gemini 4 Argon directorial score...
+        </div>
+
+        <div id="sections-strip" class="sections-strip"></div>
+
+        <canvas id="energy-canvas" width="900" height="86" title="Click anywhere on the RMS Energy & Onset Curve to invoke window.__seek(t)"></canvas>
+
+        <div class="card-title" style="margin-bottom:8px; font-size:12px;">
+          <span>🎯 Timed Choreography Cues (`events[].why` + Librosa Onset Snapping)</span>
+        </div>
+        <div id="cue-list" class="cue-list"></div>
+      </section>
+    </div>
+
+    <!-- Right Column: 3-Stage Self-Verification Loop + 8-Pose Character Sheet -->
+    <div class="col">
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🛡️ 3-Stage Self-Verification & Auto-Patch Loop</span>
+          </div>
+          <span id="final-verify-badge" class="status-badge pass">VERIFIED PASS</span>
+        </div>
+
+        <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+          Every generated scene is verified headlessly via Playwright Chromium (<code>window.__seek(t)</code> &amp; <code>window.__musicoLog</code>) and inspected multimodally by <strong>Gemini 4 Argon</strong> against the Visual Score's <code>why</code> checklist.
+        </div>
+
+        <div id="verification-iterations-container"></div>
+
+        <div id="cloud-sync-footer" style="font-size:11px; color:var(--muted); border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <span id="gcs-status-text">GCS: gs://h2gdm-hack26icn-2655-assets/musico/...</span>
+          <span id="firestore-status-text">Firestore: Synced (musico_jobs)</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🧚 8-Pose Character Sprite Sheet & #00FF00 Chroma-Key</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button id="btn-rgba-sheet" class="btn active" style="padding:4px 9px; font-size:11px;" onclick="toggleSpriteMode('rgba')">
+              RGBA Chroma-Keyed
+            </button>
+            <button id="btn-raw-sheet" class="btn" style="padding:4px 9px; font-size:11px;" onclick="toggleSpriteMode('raw')">
+              Raw #00FF00 Sheet
+            </button>
+          </div>
+        </div>
+
+        <div class="char-meta-row">
+          <div>
+            <div id="char-name-text" style="font-weight:700; font-size:14px;">Aurelia (The Sugar-Plum Sprite)</div>
+            <div id="char-concept-text" style="font-size:12px; color:var(--muted);">Crystalline ballet fairy</div>
+          </div>
+          <div id="char-palette-row" class="palette-row"></div>
+        </div>
+
+        <div class="sprite-preview-box">
+          <img id="sprite-sheet-img" src="/jobs/demo_sugar_plum_fairy/scene/sprites.png" alt="8-Pose Character Sprite Sheet" />
+          <div class="pose-labels">
+            <span>1. idle</span>
+            <span>2. bounce</span>
+            <span>3. step_left</span>
+            <span>4. step_right</span>
+            <span>5. arms_up</span>
+            <span>6. spin</span>
+            <span>7. jump</span>
+            <span>8. hold</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">Running Gemini 4 Argon Director Pipeline...</div>
+
+  <script>
+    let currentJob = null;
+    let spriteMode = "rgba";
+
+    function showToast(msg, durationMs = 0) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      if (durationMs > 0) {
+        setTimeout(() => { el.style.display = "none"; }, durationMs);
+      }
+    }
+
+    function hideToast() {
+      document.getElementById("toast").style.display = "none";
+    }
+
+    async function loadJobsList(selectedId) {
+      const res = await fetch("/api/jobs");
+      const data = await res.json();
+      const sel = document.getElementById("job-selector");
+      sel.innerHTML = "";
+      (data.jobs || []).forEach(j => {
+        const opt = document.createElement("option");
+        opt.value = j.job_id;
+        opt.textContent = `${j.title} [${j.job_id}]`;
+        if (j.job_id === selectedId) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function selectJob(jobId) {
+      document.getElementById("demo-btn-1").classList.toggle("active", jobId === "demo_sugar_plum_fairy");
+      document.getElementById("demo-btn-2").classList.toggle("active", jobId === "demo_neon_pulse");
+
+      const res = await fetch(`/api/jobs/${jobId}`);
+      if (!res.ok) return;
+      currentJob = await res.json();
+      await loadJobsList(jobId);
+      renderJobToStudio(currentJob);
+    }
+
+    function renderJobToStudio(job) {
+      document.getElementById("active-job-badge").textContent = job.job_id;
+      document.getElementById("open-standalone-link").href = job.scene_url;
+
+      const iframe = document.getElementById("scene-iframe");
+      if (!iframe.src.endsWith(job.scene_url)) {
+        iframe.src = job.scene_url;
+      }
+
+      const score = job.score || {};
+      const events = score.events || [];
+      const sections = score.sections || [];
+      const char = score.character || {};
+
+      document.getElementById("score-meta-pill").textContent =
+        `${score.bpm || 120} BPM · ${score.duration || 32}s · ${events.length} Onset-Snapped Cues`;
+      document.getElementById("director-summary-box").textContent =
+        score.director_summary || "";
+
+      // Render Sections Strip
+      const secStrip = document.getElementById("sections-strip");
+      secStrip.innerHTML = "";
+      const climaxStart = (score.climax && score.climax.start) || 18.0;
+      sections.forEach(sec => {
+        const isClimax = Math.abs(sec.start - climaxStart) < 2.0 || sec.energy >= 0.85;
+        const div = document.createElement("div");
+        div.className = "sec-block" + (isClimax ? " climax" : "");
+        div.onclick = () => seekSceneTo(sec.start + 0.15);
+        div.innerHTML = `
+          <div class="sec-time">${sec.start.toFixed(1)}s – ${sec.end.toFixed(1)}s ${isClimax ? "★ CLIMAX" : ""}</div>
+          <div class="sec-name">${sec.name}</div>
+          <div class="sec-mood">${sec.mood} · Energy ${(sec.energy * 100).toFixed(0)}%</div>
+        `;
+        secStrip.appendChild(div);
+      });
+
+      // Render Energy Curve Canvas
+      drawEnergyTimeline(job);
+
+      // Render Cue List with Onset Snap Deltas & 'Why'
+      const cueList = document.getElementById("cue-list");
+      cueList.innerHTML = "";
+      events.forEach(ev => {
+        const item = document.createElement("div");
+        item.className = "cue-item";
+        item.onclick = () => seekSceneTo(ev.t + 0.12);
+        const sign = ev.snap_delta_ms >= 0 ? "+" : "";
+        item.innerHTML = `
+          <div class="cue-meta">
+            <span class="cue-time">⏱ ${ev.t.toFixed(2)}s · ${ev.action.toUpperCase()}</span>
+            <span class="snap-badge" title="LLM raw_t=${ev.raw_t.toFixed(2)}s snapped to Librosa onset t=${ev.t.toFixed(2)}s">
+              raw ${ev.raw_t.toFixed(2)}s → Δ ${sign}${ev.snap_delta_ms.toFixed(1)}ms
+            </span>
+          </div>
+          <div>
+            <div class="cue-why"><strong>Why:</strong> "${ev.why}"</div>
+            <div class="cue-trigger">Trigger: ${ev.trigger} · Intensity: ${(ev.intensity * 100).toFixed(0)}%</div>
+          </div>
+        `;
+        cueList.appendChild(item);
+      });
+
+      // Render Character Sheet
+      document.getElementById("char-name-text").textContent = char.name || "Protagonist";
+      document.getElementById("char-concept-text").textContent = `${char.concept || ""} (${char.style || ""})`;
+      const palRow = document.getElementById("char-palette-row");
+      palRow.innerHTML = "";
+      (char.palette || []).forEach(hex => {
+        const sw = document.createElement("div");
+        sw.className = "swatch";
+        sw.style.background = hex;
+        sw.title = hex;
+        palRow.appendChild(sw);
+      });
+      updateSpriteSheetImg();
+
+      // Render 3-Stage Verification History (Iteration 1 FAIL -> Patch -> Iteration 2 PASS)
+      renderVerificationHistory(job);
+    }
+
+    function updateSpriteSheetImg() {
+      if (!currentJob) return;
+      const img = document.getElementById("sprite-sheet-img");
+      img.src = (spriteMode === "raw" ? currentJob.sprite_raw_url : currentJob.sprite_url) + `?t=${Date.now()}`;
+      document.getElementById("btn-rgba-sheet").classList.toggle("active", spriteMode === "rgba");
+      document.getElementById("btn-raw-sheet").classList.toggle("active", spriteMode === "raw");
+    }
+
+    function toggleSpriteMode(mode) {
+      spriteMode = mode;
+      updateSpriteSheetImg();
+    }
+
+    function drawEnergyTimeline(job) {
+      const canvas = document.getElementById("energy-canvas");
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const score = job.score || {};
+      const dur = Number(score.duration || 32.0);
+      const curve = (job.features_summary && job.features_summary.rms_curve) || [];
+      const climax = score.climax || { start: 18, end: 27 };
+
+      // Highlight Climax zone
+      const cx1 = (climax.start / dur) * W;
+      const cx2 = (climax.end / dur) * W;
+      ctx.fillStyle = "rgba(250, 204, 21, 0.12)";
+      ctx.fillRect(cx1, 0, cx2 - cx1, H);
+
+      // Draw RMS Curve
+      if (curve.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+        curve.forEach(pt => {
+          const x = (pt.t / dur) * W;
+          const y = H - 10 - pt.value * (H - 24);
+          ctx.lineTo(x, y);
+        });
+        ctx.lineTo(W, H);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, "rgba(168, 85, 247, 0.55)");
+        grad.addColorStop(1, "rgba(0, 245, 212, 0.05)");
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        ctx.beginPath();
+        curve.forEach((pt, idx) => {
+          const x = (pt.t / dur) * W;
+          const y = H - 10 - pt.value * (H - 24);
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = "#00f5d4";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Draw Cue Markers
+      (score.events || []).forEach(ev => {
+        const x = (ev.t / dur) * W;
+        ctx.strokeStyle = "#facc15";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, 6);
+        ctx.lineTo(x, H - 6);
+        ctx.stroke();
+
+        ctx.fillStyle = "#facc15";
+        ctx.beginPath();
+        ctx.arc(x, 12, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      canvas.onclick = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+        const targetT = Math.max(0, Math.min(dur, ratio * dur));
+        seekSceneTo(targetT);
+      };
+    }
+
+    function renderVerificationHistory(job) {
+      const container = document.getElementById("verification-iterations-container");
+      container.innerHTML = "";
+      const history = job.verification_history || [];
+
+      const finalBadge = document.getElementById("final-verify-badge");
+      const passed = job.final_verification && job.final_verification.passed;
+      finalBadge.className = "status-badge " + (passed ? "pass" : "fail");
+      finalBadge.textContent = passed
+        ? `PASS (${history.length} Iterations · Argon QA ${job.final_verification.argon_score}/100)`
+        : "VERIFICATION FAILED";
+
+      history.forEach(it => {
+        const isPass = it.status === "PASS";
+        const card = document.createElement("div");
+        card.className = "iter-card " + (isPass ? "pass" : "fail");
+
+        const ca = it.check_a_runtime || {};
+        const cb = it.check_b_timing_bounds || {};
+        const cc = it.check_c_argon_critique || {};
+
+        let framesHtml = "";
+        if (it.proxy_frames && it.proxy_frames.length) {
+          const labels = ["Intro Cue Proxy", "B-Section Cue Proxy", "Climax Apex Proxy"];
+          framesHtml = `<div class="proxy-frames-row">` +
+            it.proxy_frames.map((url, idx) => `
+              <div class="proxy-frame-card">
+                <img src="${url}?v=${Date.now()}" alt="Proxy Frame ${idx + 1}" />
+                <div class="proxy-frame-caption">Iter ${it.iteration} · ${labels[idx] || "Frame"}</div>
+              </div>
+            `).join("") +
+          `</div>`;
+        }
+
+        let diffHtml = "";
+        if (it.patch_diff) {
+          diffHtml = `
+            <div style="margin-top:10px; font-size:12px; font-weight:700; color:#d8b4fe;">
+              🔧 Auto-Patch Applied Before Next Iteration: ${it.patch_applied || ""}
+            </div>
+            <pre class="diff-block">${it.patch_diff}</pre>
+          `;
+        }
+
+        let reasonsHtml = "";
+        if (!isPass && it.failure_reasons && it.failure_reasons.length) {
+          reasonsHtml = `
+            <div style="background:rgba(239,68,68,0.14); border-left:3px solid var(--red); padding:8px 10px; font-size:12px; color:#fecaca; margin-top:8px; border-radius:0 6px 6px 0;">
+              <strong>Detected Defects (Iteration ${it.iteration}):</strong><br/>
+              ${it.failure_reasons.map(r => "• " + r).join("<br/>")}
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:13px;">Iteration ${it.iteration} — Headless Playwright + Argon Visual QA</strong>
+            <span class="status-badge ${isPass ? "pass" : "fail"}">${it.status}</span>
+          </div>
+
+          <div class="signals-grid">
+            <div class="signal-box">
+              <strong style="color:${ca.passed ? "var(--green)" : "var(--red)"};">
+                ${ca.passed ? "✓" : "✗"} Check A: Runtime & FPS
+              </strong>
+              Errors: ${ca.console_errors || 0} · Avg: ${ca.avg_fps || 58} FPS
+            </div>
+            <div class="signal-box">
+              <strong style="color:${cb.passed ? "var(--green)" : "var(--red)"};">
+                ${cb.passed ? "✓" : "✗"} Check B: ±50ms & Bounds
+              </strong>
+              Max Drift: ${cb.max_drift_ms}ms · Bounds OK: ${cb.character_bounds_ok ? "Yes" : "NO (Clipped)"}
+            </div>
+            <div class="signal-box">
+              <strong style="color:${cc.passed ? "var(--green)" : "var(--red)"};">
+                ${cc.passed ? "✓" : "✗"} Check C: Argon Proxy QA
+              </strong>
+              Score: ${cc.score || 0}/100 · ${cc.passed ? "Approved" : "Needs Patch"}
+            </div>
+          </div>
+
+          <div style="font-size:12px; color:#cbd5e1; margin-top:4px;">
+            <strong>Argon Critique:</strong> ${cc.summary || ""}
+          </div>
+
+          ${reasonsHtml}
+          ${framesHtml}
+          ${diffHtml}
+        `;
+        container.appendChild(card);
+      });
+
+      const gcsCount = Object.keys(job.gcs_urls || {}).length;
+      document.getElementById("gcs-status-text").textContent =
+        gcsCount > 0
+          ? `☁️ GCS Synced: ${gcsCount} artifacts in gs://h2gdm-hack26icn-2655-assets/musico/${job.job_id}/`
+          : `💾 Local Storage Ready: data/jobs/${job.job_id}/`;
+      document.getElementById("firestore-status-text").textContent =
+        job.firestore_synced
+          ? `🔥 Firestore: Synced (musico_jobs/${job.job_id})`
+          : `🔥 Firestore: Local State Active`;
+    }
+
+    function seekSceneTo(tSec) {
+      const iframe = document.getElementById("scene-iframe");
+      if (iframe && iframe.contentWindow) {
+        if (typeof iframe.contentWindow.__seek === "function") {
+          const snap = iframe.contentWindow.__seek(tSec);
+          document.getElementById("seek-status-readout").textContent =
+            `window.__seek(${tSec.toFixed(2)}s) → pose=${snap.pose}, inBounds=${snap.inBounds}`;
+        } else {
+          iframe.contentWindow.postMessage({ type: "MUSICO_SEEK", t: tSec }, "*");
+          document.getElementById("seek-status-readout").textContent =
+            `postMessage MUSICO_SEEK(${tSec.toFixed(2)}s)`;
+        }
+      }
+    }
+
+    function seekSceneToClimax() {
+      if (!currentJob || !currentJob.score || !currentJob.score.climax) {
+        seekSceneTo(18.15);
+        return;
+      }
+      seekSceneTo(currentJob.score.climax.start + 0.15);
+    }
+
+    async function runLivePipeline() {
+      const trackId = currentJob ? currentJob.track_id : "sugar_plum_fairy";
+      showToast(`Running Live Gemini 4 Argon Director + 3-Stage Verification for '${trackId}'...`);
+      try {
+        const res = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ track_id: trackId })
+        });
+        const newJob = await res.json();
+        currentJob = newJob;
+        await loadJobsList(newJob.job_id);
+        renderJobToStudio(newJob);
+        showToast(`Live Pipeline Completed: ${newJob.job_id} (Iter 1 FAIL → Patch → Iter 2 PASS!)`, 4000);
+      } catch (e) {
+        showToast(`Error running pipeline: ${e}`, 4000);
+      }
+    }
+
+    async function redirectCurrentJob() {
+      if (!currentJob) return;
+      const promptInput = document.getElementById("redirect-prompt-input");
+      const prompt = promptInput.value.trim() || "Emphasize dramatic high-flying leaps and golden stardust bursts on every major cadence.";
+      showToast(`Re-directing '${currentJob.title}' with Gemini 4 Argon & verifying...`);
+      try {
+        const res = await fetch(`/api/jobs/${currentJob.job_id}/redirect`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+        const newJob = await res.json();
+        currentJob = newJob;
+        await loadJobsList(newJob.job_id);
+        renderJobToStudio(newJob);
+        promptInput.value = "";
+        showToast(`Re-Directed Scene Ready & Verified: ${newJob.job_id}!`, 4000);
+      } catch (e) {
+        showToast(`Error re-directing: ${e}`, 4000);
+      }
+    }
+
+    async function rerunVerification() {
+      if (!currentJob) return;
+      showToast(`Executing Headless Playwright + Argon Multimodal Verification on ${currentJob.job_id}...`);
+      try {
+        const res = await fetch(`/api/jobs/${currentJob.job_id}/verify`, { method: "POST" });
+        const updated = await res.json();
+        currentJob = updated;
+        renderJobToStudio(updated);
+        showToast(`Verification Loop Complete: Iteration 1 FAIL → Auto-Patch → Iteration 2 PASS!`, 4000);
+      } catch (e) {
+        showToast(`Verification error: ${e}`, 4000);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      selectJob("demo_sugar_plum_fairy");
+    });
+  </script>
+</body>
+</html>

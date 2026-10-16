@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musico Scene — Neon Pulse (Cyberpunk Etude)</title>
+  <style>
+    :root {
+      --bg: #08070f;
+      --panel: rgba(16, 14, 28, 0.88);
+      --border: rgba(255, 255, 255, 0.12);
+      --accent: #a855f7;
+      --accent2: #00f5d4;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    #stage-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #141126 0%, #06050a 100%);
+      overflow: hidden;
+    }
+    #stage-canvas {
+      width: 100%;
+      height: 100%;
+      max-width: 1280px;
+      max-height: 720px;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
+    }
+    #transport-bar {
+      height: 58px;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      font-size: 13px;
+      backdrop-filter: blur(12px);
+    }
+    .btn {
+      background: rgba(168, 85, 247, 0.22);
+      color: #fff;
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      padding: 6px 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: rgba(168, 85, 247, 0.42);
+      border-color: #c084fc;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+    .btn-secondary:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    #scrubber {
+      flex: 1;
+      accent-color: var(--accent2);
+      cursor: pointer;
+      height: 5px;
+    }
+    #time-readout {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 12px;
+      color: var(--accent2);
+      min-width: 92px;
+      text-align: right;
+    }
+    .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(0, 245, 212, 0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(0, 245, 212, 0.3);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <canvas id="stage-canvas" width="1280" height="720"></canvas>
+  </div>
+  <div id="transport-bar">
+    <button id="play-btn" class="btn">▶ Play</button>
+    <input id="scrubber" type="range" min="0" max="32" step="0.02" value="0" />
+    <span id="time-readout">0.00s / 32.00s</span>
+    <span id="pose-badge" class="badge">POSE: IDLE</span>
+    <button id="seek-climax-btn" class="btn btn-secondary" title="Deterministic window.__seek(t) to Climax">⚡ Climax</button>
+    <button id="hud-btn" class="btn btn-secondary">HUD: ON</button>
+  </div>
+  <audio id="track-audio" src="audio.wav" preload="auto" crossorigin="anonymous"></audio>
+  <script src="scene.js"></script>
+</body>
+</html>
