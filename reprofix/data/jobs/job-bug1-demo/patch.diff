@@ -1,0 +1,37 @@
+--- a/demo_target_app/app.js
++++ b/demo_target_app/app.js
+@@ -67,29 +67,19 @@
+   updateHeaderMetrics();
+ }
+ 
+-// BUG 1 (bug-counter-desync):
+-// Deleting a task removes its DOM card directly, but forgets to remove the task
+-// from `state.tasks` and recompute `updateHeaderMetrics()`.
+-// As a result, #active-count stays at 3 and #velocity-pts stays at 21!
+ function deleteTask(taskId) {
+-  const card = document.getElementById(`card-${taskId}`);
+-  if (card) {
+-    card.remove();
+-  }
+-  // Missing: state.tasks = state.tasks.filter(t => t.id !== taskId);
+-  // Missing: updateHeaderMetrics();
++  state.tasks = state.tasks.filter((t) => t.id !== taskId);
++  renderTasks();
++  updateHeaderMetrics();
+ }
+ 
+-// BUG 2 (bug-discount-nan):
+-// Entering a percentage string like "15%" causes Number("15%") -> NaN,
+-// rendering "$NaN" in #estimate-total and logging an error banner.
+ function calculateEstimate() {
+   const hours = Number(document.getElementById('est-hours').value);
+   const rate = Number(document.getElementById('est-rate').value);
+   const rawDiscount = document.getElementById('est-discount').value.trim();
+ 
+-  // Buggy parsing: fails when user includes '%' symbol (e.g. "15%")
+-  const discountPct = Number(rawDiscount);
++  const cleanedDiscount = rawDiscount.replace(/%/g, '').trim();
++  const discountPct = Number(cleanedDiscount);
+ 
+   const subtotal = hours * rate;
+   const finalTotal = subtotal * (1 - discountPct / 100);

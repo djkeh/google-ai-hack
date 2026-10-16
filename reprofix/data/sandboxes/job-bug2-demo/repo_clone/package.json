@@ -1,0 +1,13 @@
+{
+  "name": "taskflow-pro-sprint-board",
+  "version": "1.0.0",
+  "description": "TaskFlow Pro — Team Sprint Board & Estimate Calculator (Demo Target Web App for ReproFix)",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "pytest existing_suite.py"
+  },
+  "keywords": ["sprint-board", "taskflow", "reprofix-demo"],
+  "license": "MIT"
+}

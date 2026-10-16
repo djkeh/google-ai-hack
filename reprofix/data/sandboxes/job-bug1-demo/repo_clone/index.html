@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow Pro — Team Sprint Board</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #26354d;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.16);
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 32px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+    }
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand span {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+    .metrics-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .metric-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0b1120;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+    }
+    .metric-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .metric-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #60a5fa;
+      font-variant-numeric: tabular-nums;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 24px;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .add-task-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    input[type="text"], input[type="number"] {
+      background: #0b1120;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      width: 100%;
+    }
+    input:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 16px;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .task-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #131c2e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .task-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .task-id {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.15);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+    .task-pts {
+      color: #cbd5e1;
+      background: #1e293b;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .task-priority {
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .priority-high {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+    }
+    .priority-medium {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fcd34d;
+    }
+    .task-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .btn-delete {
+      background: var(--danger-bg);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 8px 14px;
+    }
+    .btn-delete:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .estimate-result-box {
+      margin-top: 18px;
+      background: #0b1120;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .estimate-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .estimate-total {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--success);
+      font-variant-numeric: tabular-nums;
+    }
+    .estimate-total.is-nan {
+      color: var(--danger);
+    }
+    .error-banner {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+      color: #fecaca;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      display: none;
+    }
+    .error-banner.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-icon">TF</div>
+      <div>
+        <h1>TaskFlow Pro — Team Sprint Board</h1>
+        <span>Sprint 42 · Engineering Delivery & Cost Estimator</span>
+      </div>
+    </div>
+    <div class="metrics-bar">
+      <div class="metric-pill" data-testid="active-tasks-pill">
+        <span class="metric-label">Active Tasks</span>
+        <span class="metric-value" id="active-count" data-testid="active-count">3</span>
+      </div>
+      <div class="metric-pill" data-testid="velocity-pill">
+        <span class="metric-label">Sprint Velocity</span>
+        <span class="metric-value" id="velocity-pts" data-testid="velocity-pts">21</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" aria-label="Sprint Backlog">
+      <div class="panel-header">
+        <div class="panel-title">Sprint Backlog Tasks</div>
+        <span style="font-size:12px;color:var(--muted);">Click Delete Task to remove completed/canceled items</span>
+      </div>
+
+      <div class="add-task-row">
+        <input type="text" id="new-task-title" data-testid="new-task-title" placeholder="New sprint task title..." />
+        <input type="number" id="new-task-pts" data-testid="new-task-pts" value="3" min="1" max="21" style="width:90px;" />
+        <button class="btn-primary" id="btn-add-task" data-testid="btn-add-task" onclick="addTask()">Add Task</button>
+      </div>
+
+      <div class="task-list" id="task-list" data-testid="task-list">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Quick Estimate Calculator">
+      <div class="panel-header">
+        <div class="panel-title">Quick Estimate Calculator</div>
+        <span style="font-size:12px;color:var(--muted);">Client Sprint Billing</span>
+      </div>
+
+      <div class="form-group">
+        <label for="est-hours">Engineering Hours</label>
+        <input type="number" id="est-hours" data-testid="est-hours" value="40" />
+      </div>
+
+      <div class="form-group">
+        <label for="est-rate">Hourly Rate ($)</label>
+        <input type="number" id="est-rate" data-testid="est-rate" value="150" />
+      </div>
+
+      <div class="form-group">
+        <label for="est-discount">Partner Discount (e.g. 15% or 15)</label>
+        <input type="text" id="est-discount" data-testid="est-discount" value="0" placeholder="e.g. 15%" />
+      </div>
+
+      <button class="btn-primary" id="btn-calc-estimate" data-testid="btn-calc-estimate" style="width:100%;padding:12px;" onclick="calculateEstimate()">
+        Calculate Estimate
+      </button>
+
+      <div class="estimate-result-box">
+        <div class="estimate-label">Estimated Sprint Total</div>
+        <div class="estimate-total" id="estimate-total" data-testid="estimate-total">$6,000.00</div>
+        <div class="error-banner" id="estimate-error" data-testid="estimate-error"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
